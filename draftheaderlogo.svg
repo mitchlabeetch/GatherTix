@@ -1,63 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" role="img" aria-label="GatherTix — because it's better to gather">
-  <!--
-    GatherTix Header Logo — Neo-Editorial flat design
-    Compact ticket mark + Outfit bold wordmark + tagline.
-    Ink (#111827) | Paper (#F4F4F0) | Cobalt (#2563EB) | Leaf Green (#059669)
-  -->
-
-  <!-- ── Ticket icon mark (80×80 canvas, scaled to 64px tall at x=0) ──── -->
-  <g transform="translate(0,8) scale(0.533)">
-    <!-- Outer ticket body (120×104 path) -->
-    <path
-      d="M22 28 C22 23.582 25.582 20 30 20 L90 20 C94.418 20 98 23.582 98 28
-         L98 46 C93.582 46 90 49.582 90 54 C90 58.418 93.582 62 98 62
-         L98 92 C98 96.418 94.418 100 90 100 L30 100 C25.582 100 22 96.418 22 92
-         L22 72 C26.418 72 30 68.418 30 64 C30 59.582 26.418 56 22 56 Z"
-      fill="#111827"
-    />
-    <!-- Inner face -->
-    <rect x="30" y="28" width="60" height="68" rx="2" fill="#F4F4F0"/>
-    <!-- Perforations -->
-    <circle cx="30" cy="54" r="3" fill="#F4F4F0"/>
-    <circle cx="30" cy="62" r="3" fill="#F4F4F0"/>
-    <circle cx="30" cy="70" r="3" fill="#F4F4F0"/>
-    <circle cx="98" cy="54" r="3" fill="#F4F4F0"/>
-    <circle cx="98" cy="62" r="3" fill="#F4F4F0"/>
-    <circle cx="98" cy="70" r="3" fill="#F4F4F0"/>
-    <!-- Tear line -->
-    <line x1="30" y1="64" x2="90" y2="64" stroke="#111827" stroke-width="1.5" stroke-dasharray="4 3"/>
-    <!-- G letterform -->
-    <text
-      x="60" y="52"
-      font-family="'Outfit', system-ui, sans-serif"
-      font-size="28" font-weight="800"
-      fill="#2563EB"
-      text-anchor="middle" dominant-baseline="middle"
-      letter-spacing="-1"
-    >G</text>
-    <!-- Stub lines -->
-    <rect x="38" y="73" width="20" height="4" rx="1" fill="#2563EB"/>
-    <rect x="62" y="73" width="28" height="4" rx="1" fill="#9CA3AF"/>
-    <rect x="38" y="82" width="44" height="4" rx="1" fill="#D1D5DB"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="100%" height="100%">
+  <g transform="translate(10, 20) scale(0.66)">
+    <path d="M25 30 C25 24.477 29.477 20 35 20 L85 20 C90.523 20 95 24.477 95 30 L95 45 C90 45 87 49 87 55 C87 61 90 65 95 65 L95 90 C95 95.523 90.523 100 85 100 L35 100 C29.477 100 25 95.523 25 90 L25 75 C30 75 33 71 33 65 C33 59 30 55 25 55 L25 30 Z" fill="#111827" />
+    <path d="M50 45 L75 45 L75 55 L60 55 L60 75 L40 75 L40 45 Z" fill="#F4F4F0" />
+    <circle cx="45" cy="40" r="5" fill="#F4F4F0" />
   </g>
 
-  <!-- ── Wordmark ─────────────────────────────────────────────────────── -->
-  <text
-    x="64" y="48"
-    font-family="'Outfit', system-ui, sans-serif"
-    font-size="40" font-weight="800"
-    fill="#111827"
-    dominant-baseline="middle"
-    letter-spacing="-1.5"
-  >Gather<tspan fill="#059669">Tix</tspan></text>
-
-  <!-- ── Tagline ──────────────────────────────────────────────────────── -->
-  <text
-    x="65" y="68"
-    font-family="'Plus Jakarta Sans', system-ui, sans-serif"
-    font-size="11" font-weight="500"
-    fill="#4B5563"
-    dominant-baseline="middle"
-    letter-spacing="0.3"
-  >because it&#x27;s better to gather.</text>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@800&amp;display=swap');
+    .text-logo { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 52px; fill: #111827; letter-spacing: -1.5px; }
+    .text-accent { fill: #059669; } /* Crisp Leaf Green */
+  </style>
+  <text x="95" y="75" class="text-logo">Gather<tspan class="text-accent">Tix</tspan></text>
 </svg>
