@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{event.meta_description}}">
+  <meta property="og:title" content="{{event.name}}">
+  <meta property="og:description" content="{{event.meta_description}}">
+  <meta property="og:image" content="{{event.image_url}}">
+  <meta property="og:type" content="website">
+  <title>{{event.name}} | {{organization.name}}</title>
+  <style>
+    /* CSS Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* CSS Variables */
+    :root {
+      --primary-color: {{organization.primary_color|default:'#3B82F6'}};
+      --primary-dark: {{organization.primary_dark|default:'#2563EB'}};
+      --secondary-color: {{organization.secondary_color|default:'#8B5CF6'}};
+      --text-primary: #111827;
+      --text-secondary: #6B7280;
+      --bg-light: #F9FAFB;
+      --bg-white: #FFFFFF;
+      --border-color: #E5E7EB;
+      --success: #22C55E;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: var(--bg-white);
+    }
+    
+    /* Navigation */
+    .nav {
+      background: var(--bg-white);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+    
+    .nav-logo img {
+      height: 40px;
+      width: auto;
+    }
+    
+    .nav-logo span {
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary-color);
+    }
+    
+    .nav-cta {
+      background: var(--primary-color);
+      color: white !important;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-md);
+      transition: background 0.2s;
+    }
+    
+    .nav-cta:hover {
+      background: var(--primary-dark);
+    }
+    
+    /* Hero Section */
+    .hero {
+      position: relative;
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      overflow: hidden;
+    }
+    
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('{{event.image_url}}');
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      padding: 3rem 1.5rem;
+    }
+    
+    .hero-badge {
+      display: inline-block;
+      background: var(--success);
+      color: white;
+      padding: 0.375rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 1.125rem;
+    }
+    
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .hero-meta-item svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: var(--radius-lg);
+      font-size: 1.125rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .hero-cta:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 3rem;
+    }
+    
+    @media (max-width: 968px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Event Details */
+    .section {
+      margin-bottom: 3rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    
+    .section-content {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+    
+    .section-content p {
+      margin-bottom: 1rem;
+    }
+    
+    .section-content ul, .section-content ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .section-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Info Cards */
+    .info-card {
+      background: var(--bg-light);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .info-card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+    
+    .info-card-title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary-color);
+    }
+    
+    .info-card-content {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    /* Ticket Sidebar */
+    .ticket-sidebar {
+      position: sticky;
+      top: 100px;
+    }
+    
+    .ticket-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    
+    .ticket-card-header {
+      background: var(--bg-light);
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .ticket-card-header h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+    
+    .ticket-types {
+      padding: 1rem;
+    }
+    
+    .ticket-type {
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-bottom: 0.75rem;
+      transition: border-color 0.2s;
+    }
+    
+    .ticket-type:hover {
+      border-color: var(--primary-color);
+    }
+    
+    .ticket-type-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    
+    .ticket-type-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .ticket-type-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+    
+    .ticket-type-description {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .ticket-type-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .ticket-type-availability {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+    
+    .ticket-type-availability.low {
+      color: var(--warning);
+      font-weight: 500;
+    }
+    
+    .ticket-type-availability.sold-out {
+      color: var(--danger);
+      font-weight: 500;
+    }
+    
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .quantity-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-white);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .quantity-btn:hover {
+      background: var(--bg-light);
+    }
+    
+    .quantity-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .quantity-input {
+      width: 50px;
+      height: 32px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.9375rem;
+    }
+    
+    .ticket-card-footer {
+      padding: 1rem 1.25rem;
+      background: var(--bg-light);
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .ticket-total {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .ticket-total-amount {
+      font-size: 1.25rem;
+      color: var(--primary-color);
+    }
+    
+    .checkout-btn {
+      width: 100%;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.875rem;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .checkout-btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .checkout-btn:disabled {
+      background: var(--text-secondary);
+      cursor: not-allowed;
+    }
+    
+    /* FAQ Accordion */
+    .faq-item {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-bottom: 0.75rem;
+      overflow: hidden;
+    }
+    
+    .faq-question {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      background: var(--bg-white);
+      border: none;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    
+    .faq-question:hover {
+      background: var(--bg-light);
+    }
+    
+    .faq-question svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s;
+    }
+    
+    .faq-item.active .faq-question svg {
+      transform: rotate(180deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+    }
+    
+    .faq-answer-content {
+      padding: 0 1.25rem 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    
+    /* Organizer Section */
+    .organizer-card {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: var(--bg-light);
+      border-radius: var(--radius-lg);
+    }
+    
+    .organizer-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+    }
+    
+    .organizer-info h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .organizer-info p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .organizer-links {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .organizer-links a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    /* Footer */
+    .footer {
+      background: var(--text-primary);
+      color: white;
+      padding: 3rem 1.5rem;
+      margin-top: 4rem;
+    }
+    
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .footer-section h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .footer-section ul {
+      list-style: none;
+    }
+    
+    .footer-section li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .footer-section a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    
+    .footer-section a:hover {
+      color: white;
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 2rem;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.875rem;
+    }
+    
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .ticket-sidebar {
+        position: static;
+      }
+      
+      .organizer-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+    
+    /* Accessibility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    
+    :focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+    
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="{{organization.url}}" class="nav-logo">
+        <img src="{{organization.logo_url}}" alt="{{organization.name}} logo">
+        <span>{{organization.name}}</span>
+      </a>
+      
+      <ul class="nav-links">
+        <li><a href="{{organization.url}}/events">Events</a></li>
+        <li><a href="{{organization.url}}/about">About</a></li>
+        <li><a href="{{organization.url}}/contact">Contact</a></li>
+        <li><a href="#tickets" class="nav-cta">Get Tickets</a></li>
+      </ul>
+      
+      <button class="mobile-menu-btn" aria-label="Open menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <header class="hero" role="banner">
+    <div class="hero-bg" role="img" aria-label="{{event.name}}"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      {{#if event.on_sale}}
+      <span class="hero-badge">On Sale Now</span>
+      {{/if}}
+      <h1>{{event.name}}</h1>
+      <div class="hero-meta">
+        <span class="hero-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          {{event.date}}
+        </span>
+        <span class="hero-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          {{event.time}}
+        </span>
+        <span class="hero-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          {{event.venue}}
+        </span>
+      </div>
+      <a href="#tickets" class="hero-cta">
+        Get Tickets
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+  
+  <!-- Main Content -->
+  <main class="main">
+    <div class="content-grid">
+      
+      <!-- Left Column - Event Details -->
+      <div class="content-main">
+        
+        <!-- Description -->
+        <section class="section" aria-labelledby="about-heading">
+          <h2 id="about-heading" class="section-title">About This Event</h2>
+          <div class="section-content">
+            {{event.description}}
+          </div>
+        </section>
+        
+        <!-- Date & Time -->
+        <section class="section" aria-labelledby="datetime-heading">
+          <h2 id="datetime-heading" class="section-title">Date & Time</h2>
+          <div class="info-card">
+            <div class="info-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              {{event.date}}
+            </div>
+            <div class="info-card-content">
+              <p><strong>Doors Open:</strong> {{event.doors_time}}</p>
+              <p><strong>Event Starts:</strong> {{event.start_time}}</p>
+              <p><strong>Event Ends:</strong> {{event.end_time}}</p>
+              <p style="margin-top: 0.5rem;">
+                <a href="{{event.calendar_url}}" style="color: var(--primary-color);">Add to Calendar</a>
+              </p>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Location -->
+        <section class="section" aria-labelledby="location-heading">
+          <h2 id="location-heading" class="section-title">Location</h2>
+          <div class="info-card">
+            <div class="info-card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              {{event.venue}}
+            </div>
+            <div class="info-card-content">
+              <p>{{event.address}}</p>
+              <p>{{event.city}}, {{event.state}} {{event.zip}}</p>
+              <p style="margin-top: 0.5rem;">
+                <a href="{{event.map_url}}" target="_blank" rel="noopener" style="color: var(--primary-color);">Get Directions</a>
+              </p>
+            </div>
+          </div>
+          {{#if event.map_embed}}
+          <div style="margin-top: 1rem; border-radius: var(--radius-lg); overflow: hidden;">
+            {{event.map_embed}}
+          </div>
+          {{/if}}
+        </section>
+        
+        <!-- FAQ -->
+        <section class="section" aria-labelledby="faq-heading">
+          <h2 id="faq-heading" class="section-title">Frequently Asked Questions</h2>
+          <div class="faq-list">
+            {{#each event.faqs}}
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false">
+                {{question}}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+              <div class="faq-answer">
+                <div class="faq-answer-content">
+                  {{answer}}
+                </div>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+        </section>
+        
+        <!-- Organizer -->
+        <section class="section" aria-labelledby="organizer-heading">
+          <h2 id="organizer-heading" class="section-title">Organizer</h2>
+          <div class="organizer-card">
+            <img src="{{organization.logo_url}}" alt="{{organization.name}}" class="organizer-logo">
+            <div class="organizer-info">
+              <h4>{{organization.name}}</h4>
+              <p>{{organization.description}}</p>
+              <div class="organizer-links">
+                <a href="{{organization.url}}">View Profile</a>
+                <a href="mailto:{{organization.email}}">Contact</a>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+      </div>
+      
+      <!-- Right Column - Tickets -->
+      <aside class="ticket-sidebar" id="tickets" aria-labelledby="tickets-heading">
+        <div class="ticket-card">
+          <div class="ticket-card-header">
+            <h3 id="tickets-heading">Select Tickets</h3>
+          </div>
+          
+          <div class="ticket-types">
+            {{#each event.ticket_types}}
+            <div class="ticket-type" data-ticket-id="{{id}}">
+              <div class="ticket-type-header">
+                <span class="ticket-type-name">{{name}}</span>
+                <span class="ticket-type-price">{{price}}</span>
+              </div>
+              <p class="ticket-type-description">{{description}}</p>
+              <div class="ticket-type-footer">
+                <span class="ticket-type-availability {{availability_class}}">
+                  {{availability_text}}
+                </span>
+                {{#unless sold_out}}
+                <div class="quantity-selector">
+                  <button class="quantity-btn" aria-label="Decrease quantity">-</button>
+                  <input type="number" class="quantity-input" value="0" min="0" max="{{max_per_order}}" aria-label="Quantity">
+                  <button class="quantity-btn" aria-label="Increase quantity">+</button>
+                </div>
+                {{/unless}}
+              </div>
+            </div>
+            {{/each}}
+          </div>
+          
+          <div class="ticket-card-footer">
+            <div class="ticket-total">
+              <span>Total</span>
+              <span class="ticket-total-amount">$0.00</span>
+            </div>
+            <button class="checkout-btn" disabled>Checkout</button>
+          </div>
+        </div>
+      </aside>
+      
+    </div>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h4>{{organization.name}}</h4>
+          <ul>
+            <li><a href="{{organization.url}}/about">About Us</a></li>
+            <li><a href="{{organization.url}}/events">Events</a></li>
+            <li><a href="{{organization.url}}/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="{{help_url}}">Help Center</a></li>
+            <li><a href="{{organization.url}}/terms">Terms of Service</a></li>
+            <li><a href="{{organization.url}}/privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect</h4>
+          <ul>
+            {{#if organization.facebook}}<li><a href="{{organization.facebook}}">Facebook</a></li>{{/if}}
+            {{#if organization.twitter}}<li><a href="{{organization.twitter}}">Twitter</a></li>{{/if}}
+            {{#if organization.instagram}}<li><a href="{{organization.instagram}}">Instagram</a></li>{{/if}}
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; {{year}} {{organization.name}}. All rights reserved.</p>
+        <p style="margin-top: 0.5rem;">Powered by <a href="https://opentickets.io" style="color: rgba(255,255,255,0.7);">OpenTickets</a></p>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        const isActive = item.classList.contains('active');
+        
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('active');
+          i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        });
+        
+        // Open clicked if wasn't active
+        if (!isActive) {
+          item.classList.add('active');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+    
+    // Quantity Selector
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const selector = e.target.closest('.quantity-selector');
+        const input = selector.querySelector('.quantity-input');
+        const isIncrement = e.target.getAttribute('aria-label').includes('Increase');
+        
+        let value = parseInt(input.value) || 0;
+        const max = parseInt(input.max) || 10;
+        
+        if (isIncrement && value < max) {
+          value++;
+        } else if (!isIncrement && value > 0) {
+          value--;
+        }
+        
+        input.value = value;
+        updateTotal();
+      });
+    });
+    
+    function updateTotal() {
+      // Calculate total based on selected quantities
+      const checkoutBtn = document.querySelector('.checkout-btn');
+      const totalDisplay = document.querySelector('.ticket-total-amount');
+      
+      // Enable/disable checkout button
+      const hasSelection = Array.from(document.querySelectorAll('.quantity-input'))
+        .some(input => parseInt(input.value) > 0);
+      
+      checkoutBtn.disabled = !hasSelection;
+      
+      // Update total (simplified - would need actual price data)
+      if (hasSelection) {
+        totalDisplay.textContent = 'Calculating...';
+      } else {
+        totalDisplay.textContent = '$0.00';
+      }
+    }
+  </script>
+  
+</body>
+</html>

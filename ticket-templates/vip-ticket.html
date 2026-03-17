@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP Ticket - {{event.name}}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    /* VIP Ticket Container */
+    .ticket-vip {
+      width: 340px;
+      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,215,0,0.3);
+      position: relative;
+    }
+    
+    /* Gold accent line */
+    .ticket-vip::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+    }
+    
+    /* VIP Badge */
+    .vip-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: #1a1a2e;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px rgba(255,215,0,0.4);
+    }
+    
+    /* Ticket Header */
+    .ticket-header {
+      padding: 32px 24px 24px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,215,0,0.2);
+    }
+    
+    .org-logo {
+      width: 70px;
+      height: 70px;
+      background: white;
+      border-radius: 50%;
+      padding: 10px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #FFD700;
+    }
+    
+    .org-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .org-name {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    /* Ticket Body */
+    .ticket-body {
+      padding: 24px;
+    }
+    
+    .event-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #FFD700;
+      margin-bottom: 20px;
+      line-height: 1.3;
+      text-align: center;
+    }
+    
+    .event-details {
+      margin-bottom: 20px;
+    }
+    
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    
+    .detail-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 12px;
+      flex-shrink: 0;
+      color: #FFD700;
+    }
+    
+    .detail-content {
+      flex: 1;
+    }
+    
+    .detail-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    
+    .detail-value {
+      font-size: 14px;
+      color: white;
+      font-weight: 500;
+    }
+    
+    /* VIP Perks */
+    .vip-perks {
+      background: rgba(255,215,0,0.1);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .vip-perks-title {
+      font-size: 11px;
+      color: #FFD700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    
+    .vip-perks-list {
+      list-style: none;
+    }
+    
+    .vip-perks-list li {
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .vip-perks-list li::before {
+      content: '★';
+      position: absolute;
+      left: 0;
+      color: #FFD700;
+    }
+    
+    /* Attendee Section */
+    .attendee-section {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .attendee-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    
+    .attendee-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .ticket-type {
+      font-size: 13px;
+      color: #FFD700;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    
+    /* QR Code Section */
+    .qr-section {
+      text-align: center;
+      padding: 20px 0;
+      border-top: 2px dashed rgba(255,215,0,0.3);
+      border-bottom: 2px dashed rgba(255,215,0,0.3);
+      margin-bottom: 16px;
+    }
+    
+    .qr-code {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 12px;
+      background: white;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .qr-code img {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .qr-instruction {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+    }
+    
+    .vip-entrance {
+      font-size: 12px;
+      color: #FFD700;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    
+    /* Order Info */
+    .order-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+    }
+    
+    .order-number {
+      font-family: monospace;
+      background: rgba(255,255,255,0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: rgba(255,255,255,0.7);
+    }
+    
+    /* Ticket Footer */
+    .ticket-footer {
+      padding: 16px 24px;
+      text-align: center;
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      border-top: 1px solid rgba(255,215,0,0.2);
+    }
+    
+    /* Print styles */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      
+      .ticket-vip {
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="ticket-vip">
+    <span class="vip-badge">VIP</span>
+    
+    <div class="ticket-header">
+      <div class="org-logo">
+        <img src="{{organization.logo_url}}" alt="{{organization.name}}">
+      </div>
+      <div class="org-name">{{organization.name}}</div>
+    </div>
+    
+    <div class="ticket-body">
+      <h1 class="event-name">{{event.name}}</h1>
+      
+      <div class="event-details">
+        <div class="detail-row">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <div class="detail-content">
+            <div class="detail-label">Date</div>
+            <div class="detail-value">{{event.date}}</div>
+          </div>
+        </div>
+        
+        <div class="detail-row">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <div class="detail-content">
+            <div class="detail-label">Time</div>
+            <div class="detail-value">{{event.time}}</div>
+          </div>
+        </div>
+        
+        <div class="detail-row">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <div class="detail-content">
+            <div class="detail-label">Venue</div>
+            <div class="detail-value">{{event.venue}}</div>
+          </div>
+        </div>
+      </div>
+      
+      {{#if vip_perks}}
+      <div class="vip-perks">
+        <div class="vip-perks-title">VIP Benefits</div>
+        <ul class="vip-perks-list">
+          {{#each vip_perks}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+      
+      <div class="attendee-section">
+        <div class="attendee-label">VIP Attendee</div>
+        <div class="attendee-name">{{attendee.name}}</div>
+        <div class="ticket-type">{{attendee.ticket_type}}</div>
+      </div>
+      
+      <div class="qr-section">
+        <div class="qr-code">
+          <img src="{{attendee.qr_code}}" alt="VIP Ticket QR Code">
+        </div>
+        <p class="qr-instruction">Present this code at VIP check-in</p>
+        <p class="vip-entrance">Use VIP Entrance</p>
+      </div>
+      
+      <div class="order-info">
+        <span>Order #{{order.number}}</span>
+        <span class="order-number">{{ticket.id}}</span>
+      </div>
+    </div>
+    
+    <div class="ticket-footer">
+      <p>VIP Experience &bull; {{organization.website}}</p>
+    </div>
+  </div>
+  
+</body>
+</html>

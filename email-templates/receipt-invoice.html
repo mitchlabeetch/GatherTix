@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Receipt for Order #{{order.number}}</title>
+  <style>
+    body, table, td, p, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; }
+    @media screen and (max-width: 600px) {
+      .mobile-full-width { width: 100% !important; max-width: 100% !important; }
+      .mobile-padding { padding-left: 20px !important; padding-right: 20px !important; }
+    }
+    @media print {
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333333;">
+  
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f4;">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="mobile-full-width" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          
+          <!-- Receipt Header -->
+          <tr>
+            <td style="padding: 40px 40px 20px; border-bottom: 2px solid #E5E7EB;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="vertical-align: top;">
+                    <h1 style="margin: 0 0 5px; font-size: 28px; font-weight: 700; color: #111827;">RECEIPT</h1>
+                    <p style="margin: 0; font-size: 14px; color: #6B7280;">Order #{{order.number}}</p>
+                  </td>
+                  <td style="vertical-align: top; text-align: right;">
+                    <img src="{{organization.logo_url}}" alt="{{organization.name}}" width="120" style="max-width: 120px; height: auto;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Organization Info -->
+          <tr>
+            <td style="padding: 20px 40px;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="vertical-align: top; width: 50%;">
+                    <p style="margin: 0 0 5px; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase;">From</p>
+                    <p style="margin: 0; font-size: 14px; color: #111827; font-weight: 600;">{{organization.name}}</p>
+                    {{#if organization.address}}<p style="margin: 5px 0 0; font-size: 14px; color: #374151;">{{organization.address}}</p>{{/if}}
+                    {{#if organization.email}}<p style="margin: 5px 0 0; font-size: 14px; color: #374151;">{{organization.email}}</p>{{/if}}
+                    {{#if organization.phone}}<p style="margin: 5px 0 0; font-size: 14px; color: #374151;">{{organization.phone}}</p>{{/if}}
+                  </td>
+                  <td style="vertical-align: top; width: 50%;">
+                    <p style="margin: 0 0 5px; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase;">Bill To</p>
+                    <p style="margin: 0; font-size: 14px; color: #111827; font-weight: 600;">{{attendee.name}}</p>
+                    <p style="margin: 5px 0 0; font-size: 14px; color: #374151;">{{attendee.email}}</p>
+                    {{#if attendee.address}}<p style="margin: 5px 0 0; font-size: 14px; color: #374151;">{{attendee.address}}</p>{{/if}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Receipt Details -->
+          <tr>
+            <td style="padding: 10px 40px;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="padding: 15px; background-color: #F9FAFB; border-radius: 8px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 5px 0; font-size: 14px; color: #6B7280; width: 50%;">Receipt Date:</td>
+                        <td style="padding: 5px 0; font-size: 14px; color: #111827; text-align: right;">{{order.date}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 5px 0; font-size: 14px; color: #6B7280;">Payment Method:</td>
+                        <td style="padding: 5px 0; font-size: 14px; color: #111827; text-align: right;">{{order.payment_method}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 5px 0; font-size: 14px; color: #6B7280;">Transaction ID:</td>
+                        <td style="padding: 5px 0; font-size: 14px; color: #111827; text-align: right; font-family: monospace;">{{order.transaction_id}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Items Table -->
+          <tr>
+            <td style="padding: 20px 40px;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="padding: 12px; text-align: left; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; border-bottom: 2px solid #E5E7EB;">Description</th>
+                    <th style="padding: 12px; text-align: center; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; border-bottom: 2px solid #E5E7EB;">Qty</th>
+                    <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; border-bottom: 2px solid #E5E7EB;">Price</th>
+                    <th style="padding: 12px; text-align: right; font-size: 12px; font-weight: 600; color: #6B7280; text-transform: uppercase; border-bottom: 2px solid #E5E7EB;">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each order.tickets}}
+                  <tr>
+                    <td style="padding: 12px; font-size: 14px; color: #111827; border-bottom: 1px solid #E5E7EB;">
+                      <strong>{{ticket_type}}</strong><br>
+                      <span style="font-size: 12px; color: #6B7280;">{{event.name}}</span><br>
+                      <span style="font-size: 12px; color: #6B7280;">Attendee: {{attendee_name}}</span>
+                    </td>
+                    <td style="padding: 12px; text-align: center; font-size: 14px; color: #374151; border-bottom: 1px solid #E5E7EB;">{{quantity}}</td>
+                    <td style="padding: 12px; text-align: right; font-size: 14px; color: #374151; border-bottom: 1px solid #E5E7EB;">{{price_each}}</td>
+                    <td style="padding: 12px; text-align: right; font-size: 14px; color: #111827; font-weight: 600; border-bottom: 1px solid #E5E7EB;">{{subtotal}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Totals -->
+          <tr>
+            <td style="padding: 10px 40px 30px;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="width: 60%;"></td>
+                  <td style="width: 40%;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 8px 0; font-size: 14px; color: #6B7280;">Subtotal</td>
+                        <td style="padding: 8px 0; font-size: 14px; color: #374151; text-align: right;">{{order.subtotal}}</td>
+                      </tr>
+                      {{#if order.discount}}
+                      <tr>
+                        <td style="padding: 8px 0; font-size: 14px; color: #22C55E;">Discount</td>
+                        <td style="padding: 8px 0; font-size: 14px; color: #22C55E; text-align: right;">-{{order.discount}}</td>
+                      </tr>
+                      {{/if}}
+                      {{#if order.tax_amount}}
+                      <tr>
+                        <td style="padding: 8px 0; font-size: 14px; color: #6B7280;">Tax ({{order.tax_rate}})</td>
+                        <td style="padding: 8px 0; font-size: 14px; color: #374151; text-align: right;">{{order.tax_amount}}</td>
+                      </tr>
+                      {{/if}}
+                      {{#if order.fees}}
+                      <tr>
+                        <td style="padding: 8px 0; font-size: 14px; color: #6B7280;">Fees</td>
+                        <td style="padding: 8px 0; font-size: 14px; color: #374151; text-align: right;">{{order.fees}}</td>
+                      </tr>
+                      {{/if}}
+                      <tr>
+                        <td style="padding: 15px 0; font-size: 18px; font-weight: 700; color: #111827; border-top: 2px solid #E5E7EB;">Total</td>
+                        <td style="padding: 15px 0; font-size: 18px; font-weight: 700; color: #111827; text-align: right; border-top: 2px solid #E5E7EB;">{{order.total}}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Payment Status -->
+          <tr>
+            <td style="padding: 0 40px 30px;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="padding: 15px; background-color: #D1FAE5; border-radius: 8px; text-align: center;">
+                    <span style="display: inline-block; background-color: #22C55E; color: #ffffff; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: uppercase;">Paid</span>
+                    <p style="margin: 10px 0 0; font-size: 14px; color: #065F46;">Payment processed successfully on {{order.payment_date}}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Download/Print -->
+          <tr>
+            <td style="padding: 0 40px 40px;" class="mobile-padding no-print">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td style="padding-bottom: 10px;">
+                    <a href="{{order.receipt_pdf_url}}" style="display: block; background-color: {{organization.primary_color|default:'#3B82F6'}}; color: #ffffff; text-decoration: none; padding: 14px 24px; border-radius: 6px; font-size: 15px; font-weight: 600; text-align: center;">Download PDF Receipt</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="{{order.view_url}}" style="display: block; background-color: #ffffff; color: {{organization.primary_color|default:'#3B82F6'}}; text-decoration: none; padding: 14px 24px; border-radius: 6px; font-size: 15px; font-weight: 600; text-align: center; border: 2px solid {{organization.primary_color|default:'#3B82F6'}};">View Order Details</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; background-color: #F9FAFB; border-top: 1px solid #E5E7EB; text-align: center;" class="mobile-padding">
+              <p style="margin: 0 0 10px; font-size: 14px; color: #6B7280;">
+                <strong>{{organization.name}}</strong>
+              </p>
+              <p style="margin: 0; font-size: 12px; color: #9CA3AF;">
+                This receipt was generated electronically and is valid without signature.<br>
+                For questions about this receipt, contact <a href="mailto:{{organization.email}}" style="color: #6B7280;">{{organization.email}}</a>
+              </p>
+            </td>
+          </tr>
+          
+        </table>
+        
+      </td>
+    </tr>
+  </table>
+  
+</body>
+</html>

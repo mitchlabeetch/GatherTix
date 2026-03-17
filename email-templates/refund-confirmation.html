@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Refund Confirmation - Order #{{order.number}}</title>
+  <style>
+    body, table, td, p, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; }
+    @media screen and (max-width: 600px) {
+      .mobile-full-width { width: 100% !important; max-width: 100% !important; }
+      .mobile-padding { padding-left: 20px !important; padding-right: 20px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333333;">
+  
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f4;">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="mobile-full-width" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #F3F4F6; padding: 40px; text-align: center;" class="mobile-padding">
+              <span style="font-size: 48px; color: #6B7280;">&#8634;</span>
+              <h1 style="margin: 15px 0 0; font-size: 24px; font-weight: 700; color: #374151;">Refund Processed</h1>
+            </td>
+          </tr>
+          
+          <!-- Main content -->
+          <tr>
+            <td style="padding: 40px;" class="mobile-padding">
+              <p style="margin: 0 0 20px; font-size: 16px; color: #374151;">Hi {{attendee.name}},</p>
+              <p style="margin: 0 0 25px; font-size: 16px; color: #374151;">Your refund has been processed for order <strong>#{{order.number}}</strong>.</p>
+              
+              <!-- Refund details -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #F9FAFB; border-radius: 8px; margin: 25px 0;">
+                <tr>
+                  <td style="padding: 25px;">
+                    <h2 style="margin: 0 0 20px; font-size: 14px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.5px;">Refund Details</h2>
+                    
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="padding: 10px 0; font-size: 14px; color: #6B7280; width: 45%;">Refund Amount:</td>
+                        <td style="padding: 10px 0; font-size: 24px; font-weight: 700; color: #22C55E;">{{refund.amount}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 10px 0; font-size: 14px; color: #6B7280;">Refund Date:</td>
+                        <td style="padding: 10px 0; font-size: 14px; color: #111827;">{{refund.date}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 10px 0; font-size: 14px; color: #6B7280;">Refund Method:</td>
+                        <td style="padding: 10px 0; font-size: 14px; color: #111827;">{{refund.method}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 10px 0; font-size: 14px; color: #6B7280;">Refund ID:</td>
+                        <td style="padding: 10px 0; font-size: 14px; color: #111827; font-family: monospace;">{{refund.id}}</td>
+                      </tr>
+                      {{#if refund.reason}}
+                      <tr>
+                        <td style="padding: 10px 0; font-size: 14px; color: #6B7280;">Reason:</td>
+                        <td style="padding: 10px 0; font-size: 14px; color: #111827;">{{refund.reason}}</td>
+                      </tr>
+                      {{/if}}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Original order -->
+              <h3 style="margin: 25px 0 15px; font-size: 16px; font-weight: 700; color: #111827;">Original Order</h3>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border: 1px solid #E5E7EB; border-radius: 8px;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <p style="margin: 0 0 5px; font-size: 14px; color: #6B7280;">Event</p>
+                    <p style="margin: 0 0 15px; font-size: 16px; font-weight: 600; color: #111827;">{{event.name}}</p>
+                    
+                    <p style="margin: 0 0 5px; font-size: 14px; color: #6B7280;">Original Total</p>
+                    <p style="margin: 0; font-size: 16px; font-weight: 600; color: #111827;">{{order.total}}</p>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Timeline info -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 25px 0;">
+                <tr>
+                  <td style="padding: 20px; background-color: #FEF3C7; border-left: 4px solid #F59E0B; border-radius: 4px;">
+                    <p style="margin: 0 0 10px; font-size: 14px; font-weight: 600; color: #92400E;">Refund Timeline</p>
+                    <p style="margin: 0; font-size: 14px; color: #92400E; line-height: 1.6;">
+                      Your refund will appear in your account within <strong>5-10 business days</strong>, depending on your payment method and financial institution.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+              
+              <!-- Questions -->
+              <p style="margin: 25px 0 0; font-size: 15px; color: #374151;">
+                If you have any questions about this refund, please contact us at 
+                <a href="mailto:{{organization.email}}" style="color: {{organization.primary_color|default:'#3B82F6'}}; text-decoration: none;">{{organization.email}}</a>.
+              </p>
+              
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; background-color: #F9FAFB; border-top: 1px solid #E5E7EB; text-align: center;" class="mobile-padding">
+              <p style="margin: 0 0 10px; font-size: 14px; color: #6B7280;">
+                <strong>{{organization.name}}</strong>
+              </p>
+              <p style="margin: 0; font-size: 12px; color: #9CA3AF;">
+                {{#if organization.website}}<a href="{{organization.website}}" style="color: #9CA3AF; text-decoration: underline;">{{organization.website}}</a>{{/if}}
+              </p>
+            </td>
+          </tr>
+          
+        </table>
+        
+      </td>
+    </tr>
+  </table>
+  
+</body>
+</html>

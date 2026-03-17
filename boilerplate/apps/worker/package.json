@@ -1,0 +1,36 @@
+{
+  "name": "@ticketing/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@ticketing/database": "workspace:*",
+    "@ticketing/email": "workspace:*",
+    "@ticketing/pdf": "workspace:*",
+    "@ticketing/shared": "workspace:*",
+    "bullmq": "^5.18.0",
+    "dotenv": "^16.4.5",
+    "ioredis": "^5.4.1",
+    "minio": "^8.0.2",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@ticketing/eslint-config": "workspace:*",
+    "@ticketing/typescript-config": "workspace:*",
+    "@types/node": "^20.16.11",
+    "@types/qrcode": "^1.5.5",
+    "eslint": "^8.57.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

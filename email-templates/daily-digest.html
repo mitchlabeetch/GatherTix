@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Daily Digest - {{date}}</title>
+  <style>
+    body, table, td, p, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; }
+    @media screen and (max-width: 600px) {
+      .mobile-full-width { width: 100% !important; max-width: 100% !important; }
+      .mobile-padding { padding-left: 20px !important; padding-right: 20px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333333;">
+  
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f4;">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="mobile-full-width" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background-color: {{organization.primary_color|default:'#3B82F6'}}; padding: 30px 40px;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td>
+                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #ffffff;">Daily Digest</h1>
+                    <p style="margin: 5px 0 0; font-size: 14px; color: rgba(255,255,255,0.8);">{{date}}</p>
+                  </td>
+                  <td style="text-align: right;">
+                    <img src="{{organization.logo_url}}" alt="{{organization.name}}" width="60" style="max-width: 60px; height: auto;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Summary Stats -->
+          <tr>
+            <td style="padding: 30px 40px 20px;" class="mobile-padding">
+              <h2 style="margin: 0 0 20px; font-size: 16px; font-weight: 700; color: #111827;">Today's Summary</h2>
+              
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td width="48%" style="padding: 20px; background-color: #EFF6FF; border-radius: 8px;">
+                    <p style="margin: 0 0 5px; font-size: 12px; color: #6B7280; text-transform: uppercase;">Orders</p>
+                    <p style="margin: 0; font-size: 28px; font-weight: 700; color: {{organization.primary_color|default:'#3B82F6'}};">{{summary.orders_count}}</p>
+                  </td>
+                  <td width="4%"></td>
+                  <td width="48%" style="padding: 20px; background-color: #F0FDF4; border-radius: 8px;">
+                    <p style="margin: 0 0 5px; font-size: 12px; color: #6B7280; text-transform: uppercase;">Revenue</p>
+                    <p style="margin: 0; font-size: 28px; font-weight: 700; color: #22C55E;">{{summary.revenue}}</p>
+                  </td>
+                </tr>
+                <tr><td style="height: 15px;"></td></tr>
+                <tr>
+                  <td width="48%" style="padding: 20px; background-color: #FEF3C7; border-radius: 8px;">
+                    <p style="margin: 0 0 5px; font-size: 12px; color: #6B7280; text-transform: uppercase;">Tickets Sold</p>
+                    <p style="margin: 0; font-size: 28px; font-weight: 700; color: #F59E0B;">{{summary.tickets_sold}}</p>
+                  </td>
+                  <td width="4%"></td>
+                  <td width="48%" style="padding: 20px; background-color: #FEE2E2; border-radius: 8px;">
+                    <p style="margin: 0 0 5px; font-size: 12px; color: #6B7280; text-transform: uppercase;">Refunds</p>
+                    <p style="margin: 0; font-size: 28px; font-weight: 700; color: #EF4444;">{{summary.refunds_count}}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- New Orders -->
+          {{#if new_orders.length}}
+          <tr>
+            <td style="padding: 20px 40px;" class="mobile-padding">
+              <h2 style="margin: 0 0 20px; font-size: 16px; font-weight: 700; color: #111827;">New Orders</h2>
+              
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                {{#each new_orders}}
+                <tr>
+                  <td style="padding: 15px; background-color: #F9FAFB; border-radius: 8px; margin-bottom: 10px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="vertical-align: top;">
+                          <p style="margin: 0 0 5px; font-size: 14px; font-weight: 600; color: #111827;">{{event.name}}</p>
+                          <p style="margin: 0; font-size: 13px; color: #6B7280;">{{attendee.name}} &bull; {{time}}</p>
+                        </td>
+                        <td style="vertical-align: top; text-align: right;">
+                          <p style="margin: 0; font-size: 16px; font-weight: 700; color: #22C55E;">{{total}}</p>
+                          <p style="margin: 5px 0 0; font-size: 12px; color: #6B7280;">{{ticket_count}} tickets</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{#unless @last}}<tr><td style="height: 10px;"></td></tr>{{/unless}}
+                {{/each}}
+              </table>
+            </td>
+          </tr>
+          {{/if}}
+          
+          <!-- Upcoming Events -->
+          {{#if upcoming_events.length}}
+          <tr>
+            <td style="padding: 20px 40px;" class="mobile-padding">
+              <h2 style="margin: 0 0 20px; font-size: 16px; font-weight: 700; color: #111827;">Upcoming Events (Next 7 Days)</h2>
+              
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                {{#each upcoming_events}}
+                <tr>
+                  <td style="padding: 15px; border: 1px solid #E5E7EB; border-radius: 8px; margin-bottom: 10px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <tr>
+                        <td style="vertical-align: top; width: 50px;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background-color: {{organization.primary_color|default:'#3B82F6'}}; border-radius: 6px; text-align: center; width: 45px;">
+                            <tr>
+                              <td style="padding: 8px 4px;">
+                                <p style="margin: 0; font-size: 10px; color: rgba(255,255,255,0.8); text-transform: uppercase;">{{month}}</p>
+                                <p style="margin: 0; font-size: 18px; font-weight: 700; color: #ffffff;">{{day}}</p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="vertical-align: top; padding-left: 15px;">
+                          <p style="margin: 0 0 5px; font-size: 15px; font-weight: 600; color: #111827;">{{name}}</p>
+                          <p style="margin: 0; font-size: 13px; color: #6B7280;">{{tickets_sold}} sold / {{capacity}} capacity</p>
+                        </td>
+                        <td style="vertical-align: middle; text-align: right;">
+                          <a href="{{url}}" style="font-size: 13px; color: {{organization.primary_color|default:'#3B82F6'}}; text-decoration: none;">View &rarr;</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                {{#unless @last}}<tr><td style="height: 10px;"></td></tr>{{/unless}}
+                {{/each}}
+              </table>
+            </td>
+          </tr>
+          {{/if}}
+          
+          <!-- CTA -->
+          <tr>
+            <td style="padding: 20px 40px 40px;" class="mobile-padding">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td>
+                    <a href="{{dashboard_url}}" style="display: block; background-color: {{organization.primary_color|default:'#3B82F6'}}; color: #ffffff; text-decoration: none; padding: 14px 24px; border-radius: 8px; font-size: 15px; font-weight: 600; text-align: center;">View Full Dashboard</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; background-color: #F9FAFB; border-top: 1px solid #E5E7EB; text-align: center;" class="mobile-padding">
+              <p style="margin: 0; font-size: 12px; color: #9CA3AF;">
+                You're receiving this because you subscribed to daily digests from {{organization.name}}.<br>
+                <a href="{{unsubscribe_url}}" style="color: #6B7280; text-decoration: underline;">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+          
+        </table>
+        
+      </td>
+    </tr>
+  </table>
+  
+</body>
+</html>

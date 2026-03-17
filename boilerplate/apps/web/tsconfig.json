@@ -1,0 +1,14 @@
+{
+  "extends": "@ticketing/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@ticketing/ui": ["../../packages/ui/src"],
+      "@ticketing/shared": ["../../packages/shared/src"],
+      "@ticketing/database": ["../../packages/database/src"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

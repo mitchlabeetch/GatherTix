@@ -1,0 +1,72 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-workspace.yaml turbo.json ./
+COPY apps/worker/package.json ./apps/worker/
+COPY packages/database/package.json ./packages/database/
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/email/package.json ./packages/email/
+COPY packages/pdf/package.json ./packages/pdf/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY apps/worker ./apps/worker
+COPY packages ./packages
+COPY packages/database/prisma ./packages/database/prisma
+
+# Generate Prisma client
+RUN pnpm --filter @ticketing/database db:generate
+
+# Build packages
+RUN pnpm --filter @ticketing/shared build
+RUN pnpm --filter @ticketing/database build
+RUN pnpm --filter @ticketing/email build
+RUN pnpm --filter @ticketing/pdf build
+
+# Build worker
+RUN pnpm --filter @ticketing/worker build
+
+# Production stage
+FROM node:20-alpine AS production
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-workspace.yaml turbo.json ./
+COPY apps/worker/package.json ./apps/worker/
+COPY packages/database/package.json ./packages/database/
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/email/package.json ./packages/email/
+COPY packages/pdf/package.json ./packages/pdf/
+
+# Install production dependencies only
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy built files from builder
+COPY --from=builder /app/apps/worker/dist ./apps/worker/dist
+COPY --from=builder /app/packages/database/dist ./packages/database/dist
+COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
+COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
+COPY --from=builder /app/packages/email/dist ./packages/email/dist
+COPY --from=builder /app/packages/pdf/dist ./packages/pdf/dist
+
+# Generate Prisma client for production
+RUN pnpm --filter @ticketing/database db:generate
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD pgrep -f "node apps/worker/dist/index.js" || exit 1
+
+# Start the worker
+CMD ["node", "apps/worker/dist/index.js"]

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Badge - {{attendee.name}}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    
+    /* Badge Container - Standard 4x3 inch badge */
+    .badge {
+      width: 4in;
+      height: 3in;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Lanyard hole guides */
+    .lanyard-hole {
+      position: absolute;
+      top: 0.25in;
+      width: 0.25in;
+      height: 0.25in;
+      border: 2px dashed #ccc;
+      border-radius: 50%;
+    }
+    
+    .lanyard-hole.left {
+      left: 0.5in;
+    }
+    
+    .lanyard-hole.right {
+      right: 0.5in;
+    }
+    
+    /* Badge Header */
+    .badge-header {
+      background: {{organization.primary_color|default:'#3B82F6'}};
+      padding: 0.25in 0.5in;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .badge-org-logo {
+      height: 0.4in;
+      max-width: 1.5in;
+    }
+    
+    .badge-org-logo img {
+      height: 100%;
+      width: auto;
+    }
+    
+    .badge-event-name {
+      font-size: 10pt;
+      color: rgba(255,255,255,0.9);
+      font-weight: 600;
+      text-align: right;
+    }
+    
+    /* Badge Body */
+    .badge-body {
+      flex: 1;
+      display: flex;
+      padding: 0.25in 0.5in;
+      gap: 0.25in;
+    }
+    
+    /* Left side - Attendee info */
+    .badge-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .attendee-type {
+      display: inline-block;
+      background: {{organization.secondary_color|default:'#8B5CF6'}};
+      color: white;
+      padding: 0.08in 0.2in;
+      border-radius: 4px;
+      font-size: 9pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.15in;
+      width: fit-content;
+    }
+    
+    .attendee-name {
+      font-size: 28pt;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.1;
+      margin-bottom: 0.1in;
+      word-break: break-word;
+    }
+    
+    .attendee-org {
+      font-size: 12pt;
+      color: #6B7280;
+      margin-bottom: 0.15in;
+    }
+    
+    .attendee-title {
+      font-size: 11pt;
+      color: {{organization.primary_color|default:'#3B82F6'}};
+      font-weight: 500;
+    }
+    
+    /* Right side - QR Code */
+    .badge-qr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 1.2in;
+    }
+    
+    .qr-code {
+      width: 1in;
+      height: 1in;
+      background: white;
+      padding: 0.05in;
+      border: 1px solid #E5E7EB;
+      border-radius: 4px;
+    }
+    
+    .qr-code img {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .qr-label {
+      font-size: 7pt;
+      color: #9CA3AF;
+      margin-top: 0.08in;
+      text-align: center;
+    }
+    
+    /* Badge Footer */
+    .badge-footer {
+      background: #F9FAFB;
+      padding: 0.15in 0.5in;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #E5E7EB;
+    }
+    
+    .badge-date {
+      font-size: 9pt;
+      color: #6B7280;
+    }
+    
+    .badge-id {
+      font-family: monospace;
+      font-size: 8pt;
+      color: #9CA3AF;
+    }
+    
+    /* Back of badge (for double-sided printing) */
+    .badge-back {
+      display: none;
+    }
+    
+    /* Print styles */
+    @media print {
+      @page {
+        size: 4in 3in;
+        margin: 0;
+      }
+      
+      body {
+        background: white;
+        padding: 0;
+        margin: 0;
+      }
+      
+      .badge {
+        box-shadow: none;
+        page-break-inside: avoid;
+      }
+      
+      .lanyard-hole {
+        border: 1px dashed #999;
+      }
+    }
+    
+    /* Preview mode - show both sides */
+    .preview-mode .badge-back {
+      display: flex;
+      margin-top: 20px;
+    }
+    
+    .badge-back-content {
+      flex: 1;
+      padding: 0.25in;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .schedule-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.15in;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .schedule-item {
+      font-size: 9pt;
+      color: #374151;
+      padding: 0.08in 0;
+      border-bottom: 1px dotted #E5E7EB;
+    }
+    
+    .schedule-item:last-child {
+      border-bottom: none;
+    }
+    
+    .schedule-time {
+      font-weight: 600;
+      color: {{organization.primary_color|default:'#3B82F6'}};
+    }
+    
+    .emergency-info {
+      margin-top: auto;
+      padding-top: 0.15in;
+      border-top: 1px solid #E5E7EB;
+      font-size: 8pt;
+      color: #6B7280;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Front of Badge -->
+  <div class="badge">
+    <!-- Lanyard hole guides -->
+    <div class="lanyard-hole left"></div>
+    <div class="lanyard-hole right"></div>
+    
+    <!-- Header -->
+    <div class="badge-header">
+      <div class="badge-org-logo">
+        <img src="{{organization.logo_url}}" alt="{{organization.name}}">
+      </div>
+      <div class="badge-event-name">{{event.short_name}}</div>
+    </div>
+    
+    <!-- Body -->
+    <div class="badge-body">
+      <div class="badge-info">
+        <span class="attendee-type">{{attendee.type}}</span>
+        <h1 class="attendee-name">{{attendee.name}}</h1>
+        {{#if attendee.organization}}
+        <p class="attendee-org">{{attendee.organization}}</p>
+        {{/if}}
+        {{#if attendee.title}}
+        <p class="attendee-title">{{attendee.title}}</p>
+        {{/if}}
+      </div>
+      
+      <div class="badge-qr">
+        <div class="qr-code">
+          <img src="{{attendee.qr_code}}" alt="Badge QR Code">
+        </div>
+        <p class="qr-label">Scan to check in</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="badge-footer">
+      <span class="badge-date">{{event.date}}</span>
+      <span class="badge-id">#{{ticket.id}}</span>
+    </div>
+  </div>
+  
+  <!-- Back of Badge (optional, for double-sided printing) -->
+  <div class="badge badge-back">
+    <div class="lanyard-hole left"></div>
+    <div class="lanyard-hole right"></div>
+    
+    <div class="badge-header">
+      <div class="badge-org-logo">
+        <img src="{{organization.logo_url}}" alt="{{organization.name}}">
+      </div>
+    </div>
+    
+    <div class="badge-back-content">
+      {{#if event.schedule}}
+      <h3 class="schedule-title">Today's Schedule</h3>
+      {{#each event.schedule}}
+      <div class="schedule-item">
+        <span class="schedule-time">{{time}}</span> - {{activity}}
+      </div>
+      {{/each}}
+      {{/if}}
+      
+      <div class="emergency-info">
+        <strong>Emergency:</strong> {{event.emergency_contact}}<br>
+        <strong>Lost & Found:</strong> {{event.lost_found_contact}}
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

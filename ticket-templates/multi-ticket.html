@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Group Tickets - {{event.name}}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    
+    /* Page container */
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      background: white;
+      margin: 0 auto 20px;
+      padding: 0.5in;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    
+    /* Page Header */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3in;
+      padding-bottom: 0.2in;
+      border-bottom: 2px solid {{organization.primary_color|default:'#3B82F6'}};
+    }
+    
+    .page-header-logo {
+      height: 0.5in;
+    }
+    
+    .page-header-info {
+      text-align: right;
+    }
+    
+    .page-header-event {
+      font-size: 14pt;
+      font-weight: 700;
+      color: #111827;
+    }
+    
+    .page-header-date {
+      font-size: 10pt;
+      color: #6B7280;
+    }
+    
+    .page-header-order {
+      font-size: 9pt;
+      color: #9CA3AF;
+      margin-top: 4px;
+    }
+    
+    /* Tickets Grid */
+    .tickets-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.3in;
+    }
+    
+    /* Individual Ticket */
+    .ticket {
+      border: 2px solid #E5E7EB;
+      border-radius: 8px;
+      overflow: hidden;
+      page-break-inside: avoid;
+    }
+    
+    .ticket-header {
+      background: {{organization.primary_color|default:'#3B82F6'}};
+      padding: 0.15in;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .ticket-header-logo {
+      height: 0.3in;
+    }
+    
+    .ticket-header-logo img {
+      height: 100%;
+      width: auto;
+    }
+    
+    .ticket-number {
+      font-size: 8pt;
+      color: rgba(255,255,255,0.8);
+      font-family: monospace;
+    }
+    
+    .ticket-body {
+      padding: 0.2in;
+    }
+    
+    .ticket-event {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.1in;
+      line-height: 1.2;
+    }
+    
+    .ticket-details {
+      margin-bottom: 0.15in;
+    }
+    
+    .ticket-detail {
+      display: flex;
+      align-items: center;
+      font-size: 9pt;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    
+    .ticket-detail svg {
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+      color: {{organization.primary_color|default:'#3B82F6'}};
+    }
+    
+    .ticket-attendee {
+      background: #F9FAFB;
+      border-radius: 4px;
+      padding: 0.1in;
+      margin-bottom: 0.15in;
+    }
+    
+    .ticket-attendee-label {
+      font-size: 7pt;
+      color: #6B7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .ticket-attendee-name {
+      font-size: 12pt;
+      font-weight: 700;
+      color: #111827;
+    }
+    
+    .ticket-type {
+      font-size: 8pt;
+      color: {{organization.primary_color|default:'#3B82F6'}};
+      font-weight: 600;
+    }
+    
+    .ticket-qr {
+      display: flex;
+      align-items: center;
+      gap: 0.1in;
+      padding-top: 0.1in;
+      border-top: 1px dashed #E5E7EB;
+    }
+    
+    .ticket-qr-code {
+      width: 0.7in;
+      height: 0.7in;
+      flex-shrink: 0;
+    }
+    
+    .ticket-qr-code img {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .ticket-qr-info {
+      flex: 1;
+    }
+    
+    .ticket-qr-label {
+      font-size: 7pt;
+      color: #6B7280;
+    }
+    
+    .ticket-qr-id {
+      font-size: 8pt;
+      font-family: monospace;
+      color: #9CA3AF;
+    }
+    
+    /* Cut lines */
+    .cut-line {
+      border-top: 1px dashed #ccc;
+      margin: 0.2in 0;
+      position: relative;
+      page-break-after: always;
+    }
+    
+    .cut-line::before {
+      content: '✂ Cut here';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 0 10px;
+      font-size: 8pt;
+      color: #999;
+    }
+    
+    /* Print styles */
+    @media print {
+      @page {
+        size: letter;
+        margin: 0.25in;
+      }
+      
+      body {
+        background: white;
+        padding: 0;
+      }
+      
+      .page {
+        box-shadow: none;
+        margin: 0;
+        width: 100%;
+        min-height: auto;
+      }
+      
+      .ticket {
+        page-break-inside: avoid;
+      }
+      
+      .cut-line {
+        page-break-after: always;
+      }
+    }
+    
+    /* Instructions */
+    .instructions {
+      background: #FEF3C7;
+      border: 1px solid #F59E0B;
+      border-radius: 8px;
+      padding: 0.2in;
+      margin-bottom: 0.3in;
+    }
+    
+    .instructions-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #92400E;
+      margin-bottom: 0.1in;
+    }
+    
+    .instructions-text {
+      font-size: 9pt;
+      color: #92400E;
+      line-height: 1.5;
+    }
+    
+    .instructions-text ol {
+      margin-left: 0.2in;
+    }
+    
+    .instructions-text li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="page">
+    <!-- Page Header -->
+    <div class="page-header">
+      <img src="{{organization.logo_url}}" alt="{{organization.name}}" class="page-header-logo">
+      <div class="page-header-info">
+        <div class="page-header-event">{{event.name}}</div>
+        <div class="page-header-date">{{event.date}} at {{event.time}}</div>
+        <div class="page-header-order">Order #{{order.number}}</div>
+      </div>
+    </div>
+    
+    <!-- Instructions -->
+    <div class="instructions">
+      <div class="instructions-title">Important Information</div>
+      <div class="instructions-text">
+        <ol>
+          <li>Each ticket is for one person only and cannot be shared.</li>
+          <li>Please bring your ticket (printed or on your phone) to the event.</li>
+          <li>Show the QR code at check-in for fast entry.</li>
+          <li>Tickets are non-refundable unless the event is cancelled.</li>
+          <li>Questions? Contact {{organization.email}}</li>
+        </ol>
+      </div>
+    </div>
+    
+    <!-- Tickets Grid -->
+    <div class="tickets-grid">
+      {{#each tickets}}
+      <div class="ticket">
+        <div class="ticket-header">
+          <div class="ticket-header-logo">
+            <img src="{{../organization.logo_url}}" alt="{{../organization.name}}">
+          </div>
+          <span class="ticket-number">#{{id}}</span>
+        </div>
+        
+        <div class="ticket-body">
+          <h3 class="ticket-event">{{../event.name}}</h3>
+          
+          <div class="ticket-details">
+            <div class="ticket-detail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              {{../event.date}}
+            </div>
+            <div class="ticket-detail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              {{../event.time}}
+            </div>
+            <div class="ticket-detail">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              {{../event.venue}}
+            </div>
+          </div>
+          
+          <div class="ticket-attendee">
+            <div class="ticket-attendee-label">Attendee</div>
+            <div class="ticket-attendee-name">{{attendee_name}}</div>
+            <div class="ticket-type">{{ticket_type}}</div>
+          </div>
+          
+          <div class="ticket-qr">
+            <div class="ticket-qr-code">
+              <img src="{{qr_code}}" alt="Ticket QR Code">
+            </div>
+            <div class="ticket-qr-info">
+              <div class="ticket-qr-label">Scan at check-in</div>
+              <div class="ticket-qr-id">{{id}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    
+    <!-- Footer -->
+    <div style="margin-top: 0.3in; padding-top: 0.2in; border-top: 1px solid #E5E7EB; text-align: center; font-size: 8pt; color: #9CA3AF;">
+      <p>{{organization.name}} &bull; {{organization.website}} &bull; {{organization.email}}</p>
+      <p style="margin-top: 4px;">Powered by OpenTickets</p>
+    </div>
+  </div>
+  
+</body>
+</html>
