@@ -24,24 +24,24 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@react-email/components": "^0.0.25",
-    "@react-email/render": "^1.0.1",
-    "react-email": "^3.0.1",
-    "resend": "^4.0.0"
+    "@react-email/components": "^1.0.10",
+    "@react-email/render": "^2.0.4",
+    "react-email": "^5.2.10",
+    "resend": "^6.9.4"
   },
   "devDependencies": {
     "@ticketing/eslint-config": "workspace:*",
     "@ticketing/typescript-config": "workspace:*",
-    "@types/node": "^20.16.11",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.1",
+    "@types/node": "^20.19.37",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "eslint": "^8.57.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "typescript": "^5.6.3"
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }
