@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="GatherTix icon">
+  <!-- Interlocking tickets forming "G" shape — Neo-Editorial flat design -->
+  <!-- Background -->
+  <rect width="64" height="64" fill="#F4F4F0" rx="4"/>
+  <!-- Ticket 1 (horizontal, top) -->
+  <rect x="8" y="8" width="36" height="14" fill="#2563EB" rx="2"/>
+  <circle cx="44" cy="15" r="5" fill="#F4F4F0"/>
+  <!-- Ticket 2 (vertical, left) -->
+  <rect x="8" y="8" width="14" height="36" fill="#111827" rx="2"/>
+  <circle cx="15" cy="44" r="5" fill="#F4F4F0"/>
+  <!-- Ticket 3 (horizontal, bottom-right — forms the gap of "G") -->
+  <rect x="22" y="38" width="22" height="14" fill="#2563EB" rx="2"/>
+  <circle cx="22" cy="45" r="5" fill="#F4F4F0"/>
+  <!-- Ticket 4 (vertical, right) -->
+  <rect x="44" y="30" width="12" height="22" fill="#111827" rx="2"/>
+  <circle cx="50" cy="30" r="5" fill="#F4F4F0"/>
+</svg>

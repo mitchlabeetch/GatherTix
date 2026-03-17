@@ -1,4 +1,4 @@
-# OpenTickets - Complete Open Source Ticketing Platform
+# GatherTix - Complete Open Source Ticketing Platform
 
 > **A comprehensive, libre-software audit and development foundation for a self-hosted ticketing platform designed for non-profits and small event teams.**
 
@@ -6,7 +6,7 @@
 
 ## 📋 Executive Summary
 
-This repository contains a complete open source/libre software audit and development foundation for building **OpenTickets** - a lightweight, self-hosted ticketing platform designed specifically for:
+This repository contains a complete open source/libre software audit and development foundation for building **GatherTix** - a lightweight, self-hosted ticketing platform designed specifically for:
 
 - Non-profit organizations
 - Community groups
@@ -17,7 +17,7 @@ This repository contains a complete open source/libre software audit and develop
 
 | Principle | Implementation |
 |-----------|----------------|
-| **Open Source** | MIT License, all dependencies evaluated for software freedom |
+| **Open Source** | AGPLv3 License, all dependencies evaluated for software freedom |
 | **Self-Hosted** | Single VPS deployment, full data control |
 | **Non-Profit Focused** | Minimized fees, accessible design, community values |
 | **Easy Setup** | Docker-based deployment, comprehensive documentation |
@@ -408,14 +408,14 @@ We welcome contributions from the community!
 
 ## 📜 License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the **AGPLv3 License**.
 
 All dependencies have been evaluated for open source compatibility. See [Tech Stack Audit](./audit-techstack.md) for details.
 
 ```
-MIT License
+AGPLv3 License
 
-Copyright (c) 2026 OpenTickets Contributors
+Copyright (c) 2026 GatherTix Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

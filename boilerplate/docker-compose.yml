@@ -4,7 +4,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: ticketing-postgres
+    container_name: gathertix-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-ticketing}
@@ -20,17 +20,17 @@ services:
       timeout: 5s
       retries: 5
 
-  # Redis Cache & Queue
-  redis:
-    image: redis:7-alpine
-    container_name: ticketing-redis
+  # Valkey Cache & Queue (Redis-compatible, Apache-2.0 licensed)
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: gathertix-valkey
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - valkey_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "valkey-cli", "ping"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -38,7 +38,7 @@ services:
   # MinIO Object Storage
   minio:
     image: minio/minio:latest
-    container_name: ticketing-minio
+    container_name: gathertix-minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
@@ -64,8 +64,8 @@ services:
       /bin/sh -c "
       sleep 10;
       /usr/bin/mc config host add minio http://minio:9000 ${MINIO_ROOT_USER:-minioadmin} ${MINIO_ROOT_PASSWORD:-minioadmin};
-      /usr/bin/mc mb minio/ticketing || true;
-      /usr/bin/mc policy set public minio/ticketing || true;
+      /usr/bin/mc mb minio/gathertix || true;
+      /usr/bin/mc policy set public minio/gathertix || true;
       exit 0;
       "
 
@@ -74,13 +74,13 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.api
-    container_name: ticketing-api
+    container_name: gathertix-api
     restart: unless-stopped
     environment:
       NODE_ENV: development
       PORT: 3001
       DATABASE_URL: postgresql://${POSTGRES_USER:-ticketing}:${POSTGRES_PASSWORD:-ticketing}@postgres:5432/${POSTGRES_DB:-ticketing}
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: redis://valkey:6379
       CORS_ORIGIN: http://localhost:3000
       SESSION_SECRET: ${SESSION_SECRET:-your-super-secret-session-key-change-in-production}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
@@ -106,7 +106,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
+      valkey:
         condition: service_healthy
       minio:
         condition: service_healthy
@@ -117,7 +117,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.web
-    container_name: ticketing-web
+    container_name: gathertix-web
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -139,12 +139,12 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.worker
-    container_name: ticketing-worker
+    container_name: gathertix-worker
     restart: unless-stopped
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://${POSTGRES_USER:-ticketing}:${POSTGRES_PASSWORD:-ticketing}@postgres:5432/${POSTGRES_DB:-ticketing}
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: redis://valkey:6379
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       EMAIL_FROM: ${EMAIL_FROM:-noreply@example.com}
       EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Ticketing Platform}
@@ -162,11 +162,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
+      valkey:
         condition: service_healthy
     command: pnpm --filter @ticketing/worker dev
 
 volumes:
   postgres_data:
-  redis_data:
+  valkey_data:
   minio_data:

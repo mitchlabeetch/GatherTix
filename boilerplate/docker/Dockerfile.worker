@@ -1,3 +1,14 @@
+# Pruner stage — isolates workspace dependencies for faster builds
+FROM node:20-alpine AS pruner
+
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+
+WORKDIR /app
+
+COPY . .
+
+RUN npx turbo prune --scope=@ticketing/worker --docker
+
 # Build stage
 FROM node:20-alpine AS builder
 
@@ -6,21 +17,16 @@ RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-workspace.yaml turbo.json ./
-COPY apps/worker/package.json ./apps/worker/
-COPY packages/database/package.json ./packages/database/
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/email/package.json ./packages/email/
-COPY packages/pdf/package.json ./packages/pdf/
+# Copy pruned output (package files only)
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
 
-# Copy source code
-COPY apps/worker ./apps/worker
-COPY packages ./packages
-COPY packages/database/prisma ./packages/database/prisma
+# Copy pruned source code
+COPY --from=pruner /app/out/full/ .
+COPY --from=pruner /app/out/full/packages/database/prisma ./packages/database/prisma
 
 # Generate Prisma client
 RUN pnpm --filter @ticketing/database db:generate
@@ -42,13 +48,9 @@ RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-workspace.yaml turbo.json ./
-COPY apps/worker/package.json ./apps/worker/
-COPY packages/database/package.json ./packages/database/
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/email/package.json ./packages/email/
-COPY packages/pdf/package.json ./packages/pdf/
+# Copy pruned output for production install
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
 # Install production dependencies only
 RUN pnpm install --frozen-lockfile --prod

@@ -66,6 +66,7 @@ model Session {
 model Organization {
   id          String   @id @default(cuid())
   slug        String   @unique
+  subdomain   String   @unique
   name        String
   description String?
   logo        String?
@@ -187,8 +188,16 @@ model TicketType {
   description String?
   
   // Pricing
-  price       Decimal  @db.Decimal(10, 2)
-  currency    String   @default("USD")
+  price          Int      // stored in cents, e.g. $25.00 = 2500
+  currency       String   @default("USD")
+
+  // Sliding scale / pay-what-you-can support
+  isSlidingScale Boolean  @default(false) @map("is_sliding_scale")
+  minPrice       Int?     @map("min_price")       // minimum allowed price in cents
+  suggestedPrice Int?     @map("suggested_price") // recommended price in cents
+
+  // Volunteer / comp tickets (bypasses payment)
+  isVolunteer    Boolean  @default(false) @map("is_volunteer")
   
   // Quantity
   quantity    Int      @default(0)
@@ -236,13 +245,16 @@ model Order {
   customerName  String?     @map("customer_name")
   customerPhone String?     @map("customer_phone")
   
-  // Pricing
-  subtotal      Decimal     @db.Decimal(10, 2)
-  fees          Decimal     @default(0) @db.Decimal(10, 2)
-  discount      Decimal     @default(0) @db.Decimal(10, 2)
-  tax           Decimal     @default(0) @db.Decimal(10, 2)
-  total         Decimal     @db.Decimal(10, 2)
+  // Pricing (all values stored in cents to avoid floating-point errors)
+  subtotal      Int
+  fees          Int         @default(0)
+  discount      Int         @default(0)
+  tax           Int         @default(0)
+  total         Int
   currency      String      @default("USD")
+
+  // Optional donation added at checkout
+  donationAmount Int        @default(0) @map("donation_amount")
   
   // Status
   status        OrderStatus @default(PENDING)
@@ -254,7 +266,7 @@ model Order {
   
   // Refund
   refundedAt    DateTime?   @map("refunded_at")
-  refundAmount  Decimal?    @db.Decimal(10, 2) @map("refund_amount")
+  refundAmount  Int?        @map("refund_amount")
   refundReason  String?     @map("refund_reason")
   
   // Metadata
@@ -374,10 +386,10 @@ model Payment {
   provider      PaymentProvider
   providerId    String?       @map("provider_id") // External payment ID
   
-  // Amount
-  amount        Decimal       @db.Decimal(10, 2)
+  // Amount (stored in cents)
+  amount        Int
   currency      String        @default("USD")
-  fees          Decimal       @default(0) @db.Decimal(10, 2)
+  fees          Int           @default(0)
   
   // Status
   status        PaymentStatus @default(PENDING)
@@ -646,6 +658,7 @@ enum TicketStatus {
 enum PaymentProvider {
   STRIPE
   PAYPAL
+  ZEFFY
   MANUAL
 }
 
