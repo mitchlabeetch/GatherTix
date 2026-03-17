@@ -3948,7 +3948,7 @@ reindexdb opentickets
 **A:** For day-to-day use, no! The interface is designed for non-technical users. However, you'll need someone technical (or a friendly volunteer) for the initial setup.
 
 ### Q4: Is GatherTix really free?
-**A:** Yes! GatherTix is open-source software licensed under the GNU AGPLv3. Self-hosting is free; you only pay for server hosting and payment processor fees (typically 2.9% + $0.30 per transaction for Stripe, or 0% with Zeffy for eligible non-profits). You only pay for your server hosting and payment processor fees (typically 2.9% + $0.30 per transaction).
+**A:** Yes! GatherTix is open-source software licensed under the GNU AGPLv3. Self-hosting is free; you only pay for server hosting and payment processor fees (typically 2.9% + $0.30 per transaction for Stripe, or 0% with Zeffy for eligible non-profits).
 
 ### Q5: Can I use GatherTix for multiple organizations?
 **A:** Yes, a single GatherTix instance can host multiple organizations, making it perfect for community foundations or event collectives.
