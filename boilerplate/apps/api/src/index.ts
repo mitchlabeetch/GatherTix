@@ -40,14 +40,18 @@ async function main() {
     logger: logger as unknown as Fastify.FastifyLoggerInstance,
   });
 
-  // Raw body parser for webhook routes — retains the buffer so that
-  // Stripe and Zeffy HMAC signatures can be validated against the original bytes.
+  // Raw body parser for all application/json requests.
+  // Fastify only allows one content-type parser per MIME type, so this single
+  // handler covers both webhook routes (which need the raw buffer for HMAC
+  // signature verification) and all other JSON routes.
+  // The JSON parsing overhead is negligible — the buffer is parsed once and
+  // the raw bytes are only stored on requests that actually need them.
   app.addContentTypeParser(
     "application/json",
     { parseAs: "buffer" },
     function (req, body, done) {
       if (req.url?.startsWith("/api/webhooks")) {
-        // Attach raw buffer to request for signature verification
+        // Attach raw buffer to request for Stripe/Zeffy signature verification
         req.rawBody = body as Buffer;
       }
       try {

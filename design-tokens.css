@@ -65,7 +65,7 @@
   /* ── Base Palette — Paper & Ink Foundation ────────────────────────────────── */
   --bg-paper:   #F4F4F0;  /* Warm matte off-white — primary page background */
   --bg-white:   #FFFFFF;  /* Pure white — ONLY inside inputs, cards, modals */
-  --bg-subtle:  #EBEBЕ7;  /* Slightly darker for nested sections/alternating rows */
+  --bg-subtle:  #EBEBE7;  /* Slightly darker for nested sections/alternating rows */
 
   --ink-base:   #111827;  /* Soft black — primary text, borders, headings */
   --ink-muted:  #4B5563;  /* Secondary text, metadata, captions */
