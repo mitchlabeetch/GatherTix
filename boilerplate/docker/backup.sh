@@ -63,8 +63,8 @@ PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump \
   --no-password \
   --format=custom \
   --compress=9 \
-  "${POSTGRES_DB}" \
-  | gzip > "${BACKUP_FILE}"
+  --file="${BACKUP_FILE}" \
+  "${POSTGRES_DB}"
 
 BACKUP_SIZE="$(du -sh "${BACKUP_FILE}" | cut -f1)"
 echo "[$(date -Iseconds)] Backup created: ${BACKUP_FILE} (${BACKUP_SIZE})"
