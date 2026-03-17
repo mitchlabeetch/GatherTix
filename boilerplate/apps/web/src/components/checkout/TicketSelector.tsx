@@ -212,7 +212,7 @@ export function TicketSelector({
           const maxQty = Math.min(ticket.maxPerOrder ?? 10, ticket.available);
 
           return (
-            <div key={ticket.id} className={`ts-ticket-row${index === 0 ? " ts-ticket-row--first" : ""}`}>
+            <div key={ticket.id} className="ts-ticket-row">
               {/* Row: name + price + quantity controls */}
               <div className="ts-ticket-row-inner">
                 {/* Left: name, description, price */}

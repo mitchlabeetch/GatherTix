@@ -198,8 +198,15 @@
     box-shadow var(--transition-fast);
 }
 
-.ts-donation-chip:hover,
+/* Selected (pressed) state — always applied regardless of pointer hover */
 .ts-donation-chip[aria-pressed="true"] {
+  background-color: var(--action-success);
+  color: var(--action-success-text);
+  box-shadow: var(--shadow-flat-xs);
+}
+
+/* Hover state — only when not already selected, to avoid duplicate visual feedback */
+.ts-donation-chip:hover:not([aria-pressed="true"]) {
   background-color: var(--action-success);
   color: var(--action-success-text);
   box-shadow: var(--shadow-flat-xs);
@@ -374,7 +381,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-wide);
-  color: #ffffff;
+  color: var(--action-success-text);
   border-radius: var(--radius-ui);
 }
 

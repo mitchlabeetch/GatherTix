@@ -41,10 +41,6 @@
 
 /* ── Text column ──────────────────────────────────────────────────────────── */
 
-.eh-text-col {
-  /* flex child sizing handled by grid parent */
-}
-
 .eh-org-label {
   font-family: var(--font-body);
   font-size: var(--font-size-xs);

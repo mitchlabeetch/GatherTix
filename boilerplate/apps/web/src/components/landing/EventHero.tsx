@@ -67,7 +67,7 @@ export function EventHero({
     <section className="eh-section">
       <div className={`eh-inner ${imageUrl ? "eh-inner--with-image" : "eh-inner--text-only"}`}>
         {/* ── Text column ─────────────────────────────────────────────────── */}
-        <div className="eh-text-col">
+        <div>
           {organizationName && (
             <p className="eh-org-label">{organizationName}</p>
           )}
