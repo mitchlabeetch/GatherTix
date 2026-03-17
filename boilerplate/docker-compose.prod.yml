@@ -4,7 +4,7 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: ticketing-postgres
+    container_name: gathertix-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -18,28 +18,28 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - ticketing-network
+      - gathertix-network
 
-  # Redis Cache & Queue
-  redis:
-    image: redis:7-alpine
-    container_name: ticketing-redis
+  # Valkey Cache & Queue (Redis-compatible, Apache-2.0 licensed)
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: gathertix-valkey
     restart: unless-stopped
-    command: redis-server --appendonly yes
+    command: valkey-server --appendonly yes
     volumes:
-      - redis_data:/data
+      - valkey_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "valkey-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - ticketing-network
+      - gathertix-network
 
   # MinIO Object Storage
   minio:
     image: minio/minio:latest
-    container_name: ticketing-minio
+    container_name: gathertix-minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
@@ -53,12 +53,12 @@ services:
       timeout: 20s
       retries: 3
     networks:
-      - ticketing-network
+      - gathertix-network
 
   # API Server
   api:
-    image: ${DOCKER_REGISTRY:-ghcr.io/yourusername}/ticketing-api:${TAG:-latest}
-    container_name: ticketing-api
+    image: ${DOCKER_REGISTRY:-ghcr.io/yourusername}/gathertix-api:${TAG:-latest}
+    container_name: gathertix-api
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -83,12 +83,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
+      valkey:
         condition: service_healthy
       minio:
         condition: service_healthy
     networks:
-      - ticketing-network
+      - gathertix-network
     deploy:
       replicas: 2
       update_config:
@@ -99,8 +99,8 @@ services:
 
   # Web Frontend
   web:
-    image: ${DOCKER_REGISTRY:-ghcr.io/yourusername}/ticketing-web:${TAG:-latest}
-    container_name: ticketing-web
+    image: ${DOCKER_REGISTRY:-ghcr.io/yourusername}/gathertix-web:${TAG:-latest}
+    container_name: gathertix-web
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -108,7 +108,7 @@ services:
     depends_on:
       - api
     networks:
-      - ticketing-network
+      - gathertix-network
     deploy:
       replicas: 2
       update_config:
@@ -119,8 +119,8 @@ services:
 
   # Worker (Background Jobs)
   worker:
-    image: ${DOCKER_REGISTRY:-ghcr.io/yourusername}/ticketing-worker:${TAG:-latest}
-    container_name: ticketing-worker
+    image: ${DOCKER_REGISTRY:-ghcr.io/yourusername}/gathertix-worker:${TAG:-latest}
+    container_name: gathertix-worker
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -138,10 +138,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
+      valkey:
         condition: service_healthy
     networks:
-      - ticketing-network
+      - gathertix-network
     deploy:
       replicas: 1
       restart_policy:
@@ -150,7 +150,7 @@ services:
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
-    container_name: ticketing-nginx
+    container_name: gathertix-nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -163,25 +163,25 @@ services:
       - web
       - api
     networks:
-      - ticketing-network
+      - gathertix-network
 
   # Certbot for SSL
   certbot:
     image: certbot/certbot
-    container_name: ticketing-certbot
+    container_name: gathertix-certbot
     volumes:
       - certbot_data:/etc/letsencrypt
       - ./docker/nginx/html:/usr/share/nginx/html
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
-      - ticketing-network
+      - gathertix-network
 
 volumes:
   postgres_data:
-  redis_data:
+  valkey_data:
   minio_data:
   certbot_data:
 
 networks:
-  ticketing-network:
+  gathertix-network:
     driver: bridge

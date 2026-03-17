@@ -1,6 +1,6 @@
-# OpenTickets Documentation & Template System
+# GatherTix Documentation & Template System
 
-> Complete documentation and user-facing templates for OpenTickets - An open source ticketing platform for non-profits and small event teams.
+> Complete documentation and user-facing templates for GatherTix - An open source ticketing platform for non-profits and small event teams.
 
 ---
 
@@ -21,9 +21,9 @@
 
 ## 1A. Getting Started Guide
 
-### What is OpenTickets?
+### What is GatherTix?
 
-OpenTickets is a **free, open-source ticketing platform** designed specifically for non-profit organizations, community groups, and small event teams. Unlike commercial ticketing services that charge per-ticket fees, OpenTickets is self-hosted software that you control.
+GatherTix is a **free, open-source ticketing platform** designed specifically for non-profit organizations, community groups, and small event teams. Unlike commercial ticketing services that charge per-ticket fees, GatherTix is self-hosted software that you control.
 
 **Key Features:**
 - Create unlimited events with multiple ticket types
@@ -33,9 +33,9 @@ OpenTickets is a **free, open-source ticketing platform** designed specifically 
 - Customizable event pages
 - No per-ticket fees (just payment processor fees)
 
-### Who is OpenTickets For?
+### Who is GatherTix For?
 
-OpenTickets is perfect for:
+GatherTix is perfect for:
 
 | Organization Type | Typical Use Cases |
 |-------------------|-------------------|
@@ -53,10 +53,10 @@ OpenTickets is perfect for:
 
 ### Quick Start (5-Minute Setup)
 
-Once your organization's OpenTickets instance is set up, here's how to create your first event:
+Once your organization's GatherTix instance is set up, here's how to create your first event:
 
 #### Step 1: Log In
-1. Go to your organization's OpenTickets URL
+1. Go to your organization's GatherTix URL
 2. Enter your email and password
 3. Click "Sign In"
 
@@ -117,7 +117,7 @@ Use this checklist to ensure your event is ready:
 
 ### Creating Your First Event
 
-Events are the heart of OpenTickets. This guide walks you through creating a complete, professional event page.
+Events are the heart of GatherTix. This guide walks you through creating a complete, professional event page.
 
 #### Event Basics
 
@@ -517,7 +517,7 @@ A smooth check-in process creates a great first impression for your event.
 #### Pre-Event Setup
 
 **One Week Before:**
-1. Download the OpenTickets Scanner app
+1. Download the GatherTix Scanner app
 2. Log in with your organizer account
 3. Download your event data (for offline use)
 4. Test scanning with a sample ticket
@@ -533,12 +533,12 @@ A smooth check-in process creates a great first impression for your event.
 #### Getting Started
 
 **Download:**
-- iOS: App Store search "OpenTickets Scanner"
-- Android: Google Play search "OpenTickets Scanner"
+- iOS: App Store search "GatherTix Scanner"
+- Android: Google Play search "GatherTix Scanner"
 
 **Login:**
 1. Open the app
-2. Enter your OpenTickets URL
+2. Enter your GatherTix URL
 3. Log in with your organizer credentials
 4. Select your event
 
@@ -714,7 +714,7 @@ Connect payment processors to accept online payments.
 
 1. Create a Stripe account at stripe.com
 2. Complete verification (business details, bank account)
-3. In OpenTickets, go to Settings > Payments
+3. In GatherTix, go to Settings > Payments
 4. Click "Connect Stripe"
 5. Authorize the connection
 6. Test with a small transaction
@@ -728,7 +728,7 @@ Connect payment processors to accept online payments.
 
 1. Create a PayPal Business account
 2. Verify your account
-3. In OpenTickets, go to Settings > Payments
+3. In GatherTix, go to Settings > Payments
 4. Enter your PayPal email
 5. Enable PayPal API access
 6. Test the connection
@@ -1442,7 +1442,7 @@ If the link expired, you can request a new one:
 
 **Subject Line Options:**
 - "You've been invited to join {{organization.name}}"
-- "Invitation: Join {{organization.name}} on OpenTickets"
+- "Invitation: Join {{organization.name}} on GatherTix"
 - "{{inviter.name}} invited you to {{organization.name}}"
 
 **Plain Text Fallback:**
@@ -2079,7 +2079,7 @@ Check-in reversed successfully!
 
 ### Dashboard
 ```
-Welcome to OpenTickets!
+Welcome to GatherTix!
 
 You don't have any events yet. Create your first event to start selling tickets.
 
@@ -3938,26 +3938,26 @@ reindexdb opentickets
 
 ## General Usage
 
-### Q1: What is OpenTickets?
-**A:** OpenTickets is a free, open-source ticketing platform designed for non-profits and small event teams. Unlike commercial services, there are no per-ticket fees—you just pay payment processor fees.
+### Q1: What is GatherTix?
+**A:** GatherTix is a free, open-source ticketing platform designed for non-profits and small event teams. Unlike commercial services, there are no per-ticket fees—you just pay payment processor fees.
 
-### Q2: Who can use OpenTickets?
+### Q2: Who can use GatherTix?
 **A:** Anyone! It's especially great for non-profits, community groups, schools, churches, and small event teams who want to avoid high ticketing fees.
 
-### Q3: Do I need technical skills to use OpenTickets?
+### Q3: Do I need technical skills to use GatherTix?
 **A:** For day-to-day use, no! The interface is designed for non-technical users. However, you'll need someone technical (or a friendly volunteer) for the initial setup.
 
-### Q4: Is OpenTickets really free?
-**A:** Yes! OpenTickets is open-source software under the MIT license. You only pay for your server hosting and payment processor fees (typically 2.9% + $0.30 per transaction).
+### Q4: Is GatherTix really free?
+**A:** Yes! GatherTix is open-source software licensed under the GNU AGPLv3. Self-hosting is free; you only pay for server hosting and payment processor fees (typically 2.9% + $0.30 per transaction for Stripe, or 0% with Zeffy for eligible non-profits).
 
-### Q5: Can I use OpenTickets for multiple organizations?
-**A:** Yes, a single OpenTickets instance can host multiple organizations, making it perfect for community foundations or event collectives.
+### Q5: Can I use GatherTix for multiple organizations?
+**A:** Yes, a single GatherTix instance can host multiple organizations, making it perfect for community foundations or event collectives.
 
-### Q6: What types of events work best with OpenTickets?
-**A:** OpenTickets works great for fundraisers, galas, concerts, workshops, conferences, meetups, classes, and community events.
+### Q6: What types of events work best with GatherTix?
+**A:** GatherTix works great for fundraisers, galas, concerts, workshops, conferences, meetups, classes, and community events.
 
 ### Q7: Can I offer free tickets?
-**A:** Absolutely! Just set the ticket price to $0. OpenTickets handles free registrations just like paid ones.
+**A:** Absolutely! Just set the ticket price to $0. GatherTix handles free registrations just like paid ones.
 
 ### Q8: How do attendees receive their tickets?
 **A:** Attendees receive an email confirmation with a PDF ticket attachment containing a QR code. They can print it or show it on their phone.
@@ -3972,7 +3972,7 @@ reindexdb opentickets
 
 ### Q11: What are the costs involved?
 **A:** 
-- OpenTickets software: FREE
+- GatherTix software: FREE
 - Server hosting: $5-50/month (depending on traffic)
 - Payment processing: 2.9% + $0.30 per transaction (Stripe/PayPal)
 
@@ -3994,7 +3994,7 @@ reindexdb opentickets
 **A:** Yes, you can create "offline" payment methods and manually mark orders as paid when you receive payment.
 
 ### Q17: Do you support multiple currencies?
-**A:** Yes! OpenTickets supports 135+ currencies through Stripe and PayPal.
+**A:** Yes! GatherTix supports 135+ currencies through Stripe and PayPal.
 
 ### Q18: Can I offer discounts or promo codes?
 **A:** Yes, you can create discount codes for dollar amounts or percentages off.
@@ -4007,7 +4007,7 @@ reindexdb opentickets
 
 ## Technical Requirements
 
-### Q21: What do I need to run OpenTickets?
+### Q21: What do I need to run GatherTix?
 **A:** 
 - A server (VPS or dedicated)
 - Domain name
@@ -4015,7 +4015,7 @@ reindexdb opentickets
 - Email service (SMTP)
 - Payment processor account
 
-### Q22: Can I host OpenTickets myself?
+### Q22: Can I host GatherTix myself?
 **A:** Yes! That's the whole point. You have full control over your data and platform.
 
 ### Q23: What are the server requirements?
@@ -4025,7 +4025,7 @@ reindexdb opentickets
 **A:** Not currently. We recommend DigitalOcean, Linode, or AWS for hosting.
 
 ### Q25: Can I use shared hosting?
-**A:** No, OpenTickets requires Node.js and a database, which most shared hosts don't support.
+**A:** No, GatherTix requires Node.js and a database, which most shared hosts don't support.
 
 ### Q26: What databases are supported?
 **A:** PostgreSQL (recommended) and MySQL 8+.
@@ -4033,7 +4033,7 @@ reindexdb opentickets
 ### Q27: Is Docker supported?
 **A:** Yes! We provide Docker Compose files for easy deployment.
 
-### Q28: Can I run OpenTickets on Windows?
+### Q28: Can I run GatherTix on Windows?
 **A:** For development, yes. For production, Linux is strongly recommended.
 
 ### Q29: What browsers are supported?
@@ -4047,11 +4047,11 @@ reindexdb opentickets
 ### Q31: Who owns the data?
 **A:** You do! All attendee data belongs to your organization. We don't access, sell, or use your data.
 
-### Q32: Is OpenTickets GDPR compliant?
-**A:** Yes, OpenTickets includes features to help you comply with GDPR, including data export and deletion.
+### Q32: Is GatherTix GDPR compliant?
+**A:** Yes, GatherTix includes features to help you comply with GDPR, including data export and deletion.
 
 ### Q33: Where is data stored?
-**A:** Wherever you host your OpenTickets instance. You have full control over data location.
+**A:** Wherever you host your GatherTix instance. You have full control over data location.
 
 ### Q34: Is data encrypted?
 **A:** Yes, sensitive data is encrypted at rest and all communications use HTTPS.
@@ -4092,7 +4092,7 @@ reindexdb opentickets
 **A:** Yes, ticket templates can be customized or you can create entirely new designs.
 
 ### Q46: Can I integrate with my website?
-**A:** Yes, you can embed event widgets or link directly to your OpenTickets pages.
+**A:** Yes, you can embed event widgets or link directly to your GatherTix pages.
 
 ### Q47: Can I add my own payment processor?
 **A:** Yes, the payment provider system is extensible. You can add custom integrations.
@@ -4100,11 +4100,11 @@ reindexdb opentickets
 ### Q48: Can I create custom reports?
 **A:** Yes, you can export data and create custom reports, or use the API to build your own.
 
-### Q49: Can I translate OpenTickets?
-**A:** Yes! OpenTickets supports internationalization. You can add translations for any language.
+### Q49: Can I translate GatherTix?
+**A:** Yes! GatherTix supports internationalization. You can add translations for any language.
 
 ### Q50: Can I modify the code?
-**A:** Absolutely! OpenTickets is open-source (MIT license). You can modify it however you need.
+**A:** Absolutely! GatherTix is open-source under the AGPL-3.0 license. You can modify it however you need, but any modifications must also be shared under the same license (including network-use).
 
 ## Support
 
@@ -4137,10 +4137,10 @@ reindexdb opentickets
 **A:** Please report security issues privately to security@opentickets.io. Do not post publicly.
 
 ### Q59: Can I hire someone to help?
-**A:** Yes! We maintain a list of consultants familiar with OpenTickets.
+**A:** Yes! We maintain a list of consultants familiar with GatherTix.
 
 ### Q60: Where can I find examples?
-**A:** Check our showcase page and community forum for examples of organizations using OpenTickets.
+**A:** Check our showcase page and community forum for examples of organizations using GatherTix.
 
 ---
 
@@ -4165,6 +4165,6 @@ reindexdb opentickets
 
 ---
 
-*This documentation is maintained by the OpenTickets community. Last updated: 2024*
+*This documentation is maintained by the GatherTix community. Last updated: 2024*
 
-*OpenTickets is released under the MIT License. You are free to use, modify, and distribute this software.*
+*GatherTix is released under the GNU Affero General Public License v3 (AGPL-3.0-or-later). You are free to use, modify, and distribute this software, provided that modifications are shared under the same terms, including for network use.*

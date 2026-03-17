@@ -1,5 +1,44 @@
+// GatherTix - Self-hosted ticketing platform for non-profits and community groups.
+// Copyright (C) 2024 GatherTix Contributors
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * TicketPDF — Brutalist PDF ticket template.
+ *
+ * Neo-Editorial design constraints:
+ *   - Horizontal layout with 2pt solid black border and dashed vertical divider
+ *   - Paper background (#F4F4F0), Cobalt Blue (#2563EB) for ticket type labels
+ *   - Hard shadow offset (structural, not visual blur)
+ *   - NO gradients, NO soft shadows, NO terracotta
+ *   - Footer: "Powered by GatherTix • Open Source Ticketing"
+ */
+
 import * as React from "react";
-import { Document, Page, Text, View, StyleSheet, Image, Svg, Path } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+
+// ── Neo-Editorial color palette ───────────────────────────────────────────────
+const COLORS = {
+  paper:      "#F4F4F0",  // Warm off-white background
+  white:      "#FFFFFF",
+  inkBase:    "#111827",  // Primary text / borders
+  inkMuted:   "#4B5563",  // Secondary text / metadata
+  inkFaint:   "#9CA3AF",  // Placeholder / disabled
+  cobalt:     "#2563EB",  // Cobalt Blue — ticket type labels
+  leafGreen:  "#059669",  // Leaf Green — impact statement
+  borderSoft: "#D1D5DB",
+};
 
 interface TicketPDFProps {
   eventName: string;
@@ -12,6 +51,8 @@ interface TicketPDFProps {
   orderNumber: string;
   qrCodeDataUrl: string;
   organizationName?: string;
+  /** Optional impact message shown in the green banner, e.g. "Your ticket funded 2 hours of workshops" */
+  impactStatement?: string;
 }
 
 export const TicketPDF: React.FC<TicketPDFProps> = ({
@@ -25,80 +66,90 @@ export const TicketPDF: React.FC<TicketPDFProps> = ({
   orderNumber,
   qrCodeDataUrl,
   organizationName,
+  impactStatement,
 }) => {
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerText}>
-            {organizationName || "Event Ticket"}
-          </Text>
-        </View>
+    <Document
+      title={`${eventName} — Ticket`}
+      author="GatherTix"
+      creator="GatherTix Open Source Ticketing"
+    >
+      <Page size="A5" orientation="landscape" style={styles.page}>
 
-        {/* Main Ticket */}
-        <View style={styles.ticketContainer}>
-          {/* Event Info */}
-          <View style={styles.eventSection}>
+        {/* ── Outer ticket border (2pt solid black) ───────────────────────── */}
+        <View style={styles.ticketOuter}>
+
+          {/* ── Left column: event & attendee info ──────────────────────── */}
+          <View style={styles.leftColumn}>
+
+            {/* Organization name — uppercase, muted */}
+            {organizationName && (
+              <Text style={styles.orgName}>{organizationName.toUpperCase()}</Text>
+            )}
+
+            {/* Ticket type label — Cobalt Blue chip */}
+            <View style={styles.ticketTypeBadge}>
+              <Text style={styles.ticketTypeBadgeText}>{ticketType.toUpperCase()}</Text>
+            </View>
+
+            {/* Event name — bold, tight */}
             <Text style={styles.eventName}>{eventName}</Text>
-            
-            <View style={styles.infoRow}>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Date</Text>
-                <Text style={styles.infoValue}>{eventDate}</Text>
-              </View>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Time</Text>
-                <Text style={styles.infoValue}>{eventTime}</Text>
-              </View>
+
+            {/* Date and time */}
+            <View style={styles.metaRow}>
+              <Text style={styles.metaLabel}>DATE</Text>
+              <Text style={styles.metaValue}>{eventDate}</Text>
             </View>
 
-            <View style={styles.infoItem}>
-              <Text style={styles.infoLabel}>Location</Text>
-              <Text style={styles.infoValue}>{eventLocation}</Text>
+            <View style={styles.metaRow}>
+              <Text style={styles.metaLabel}>TIME</Text>
+              <Text style={styles.metaValue}>{eventTime}</Text>
             </View>
+
+            <View style={styles.metaRow}>
+              <Text style={styles.metaLabel}>VENUE</Text>
+              <Text style={styles.metaValue}>{eventLocation}</Text>
+            </View>
+
+            {/* Attendee box — bordered, light paper background */}
+            <View style={styles.attendeeBox}>
+              <Text style={styles.attendeeLabel}>ATTENDEE</Text>
+              <Text style={styles.attendeeName}>{attendeeName}</Text>
+            </View>
+
+            {/* Impact statement — green banner */}
+            {impactStatement && (
+              <View style={styles.impactBanner}>
+                <Text style={styles.impactText}>💚 {impactStatement}</Text>
+              </View>
+            )}
           </View>
 
-          {/* Divider */}
+          {/* ── Dashed vertical divider ──────────────────────────────────── */}
           <View style={styles.divider} />
 
-          {/* Attendee Info */}
-          <View style={styles.attendeeSection}>
-            <View style={styles.infoRow}>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Attendee</Text>
-                <Text style={styles.infoValue}>{attendeeName}</Text>
-              </View>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Ticket Type</Text>
-                <Text style={styles.infoValue}>{ticketType}</Text>
-              </View>
+          {/* ── Right column: QR code + ticket ID ───────────────────────── */}
+          <View style={styles.rightColumn}>
+
+            {/* QR code — bordered */}
+            <View style={styles.qrBorder}>
+              <Image src={qrCodeDataUrl} style={styles.qrCode} />
             </View>
 
-            <View style={styles.infoRow}>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Ticket Number</Text>
-                <Text style={styles.infoValueSmall}>{ticketNumber}</Text>
-              </View>
-              <View style={styles.infoItem}>
-                <Text style={styles.infoLabel}>Order</Text>
-                <Text style={styles.infoValueSmall}>{orderNumber}</Text>
-              </View>
-            </View>
-          </View>
+            {/* Valid for 1 entry */}
+            <Text style={styles.validText}>VALID FOR 1 ENTRY</Text>
 
-          {/* QR Code */}
-          <View style={styles.qrSection}>
-            <Image src={qrCodeDataUrl} style={styles.qrCode} />
-            <Text style={styles.qrText}>Scan for entry</Text>
-          </View>
-        </View>
+            {/* Ticket ID — Courier (monospace) */}
+            <Text style={styles.ticketIdLabel}>TICKET ID</Text>
+            <Text style={styles.ticketId}>{ticketNumber}</Text>
 
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Please present this ticket at the entrance. This ticket is valid for one entry only.
-          </Text>
+            {/* Order number */}
+            <Text style={styles.orderLabel}>ORDER</Text>
+            <Text style={styles.orderId}>{orderNumber}</Text>
+
+            {/* Footer: "Powered by GatherTix" */}
+            <Text style={styles.poweredBy}>Powered by GatherTix{"\n"}Open Source Ticketing</Text>
+          </View>
         </View>
       </Page>
     </Document>
@@ -107,92 +158,197 @@ export const TicketPDF: React.FC<TicketPDFProps> = ({
 
 export default TicketPDF;
 
+// ── Styles ────────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
-    backgroundColor: "#ffffff",
+    padding: 24,
+    backgroundColor: COLORS.paper,
     fontFamily: "Helvetica",
   },
-  header: {
-    backgroundColor: "#000000",
-    padding: 20,
-    marginBottom: 30,
-    borderRadius: 8,
-  },
-  headerText: {
-    color: "#ffffff",
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  ticketContainer: {
-    border: "2px dashed #d1d5db",
-    borderRadius: 12,
-    padding: 30,
-    marginBottom: 30,
-  },
-  eventSection: {
-    marginBottom: 20,
-  },
-  eventName: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  infoRow: {
+
+  // Outer container — 2pt solid black border
+  ticketOuter: {
+    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 15,
+    border: "2pt solid #111827",
+    backgroundColor: COLORS.white,
   },
-  infoItem: {
+
+  // ── Left column ──────────────────────────────────────────────────────────
+  leftColumn: {
+    flex: 2,
+    padding: 20,
+    justifyContent: "flex-start",
+  },
+
+  orgName: {
+    fontFamily: "Helvetica",
+    fontSize: 7,
+    color: COLORS.inkMuted,
+    letterSpacing: 1.5,
+    marginBottom: 6,
+  },
+
+  ticketTypeBadge: {
+    alignSelf: "flex-start",
+    backgroundColor: COLORS.cobalt,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginBottom: 8,
+  },
+
+  ticketTypeBadgeText: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 7,
+    color: COLORS.white,
+    letterSpacing: 1,
+  },
+
+  eventName: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 22,
+    color: COLORS.inkBase,
+    lineHeight: 1.1,
+    marginBottom: 14,
+  },
+
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    marginBottom: 5,
+    gap: 8,
+  },
+
+  metaLabel: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 6,
+    color: COLORS.inkMuted,
+    letterSpacing: 1.5,
+    width: 36,
+  },
+
+  metaValue: {
+    fontFamily: "Helvetica",
+    fontSize: 9,
+    color: COLORS.inkBase,
     flex: 1,
   },
-  infoLabel: {
-    fontSize: 10,
-    color: "#6b7280",
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 4,
-  },
-  infoValue: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
-  infoValueSmall: {
-    fontSize: 11,
-    color: "#4a4a4a",
-  },
-  divider: {
-    borderBottom: "1px dashed #d1d5db",
-    marginVertical: 20,
-  },
-  attendeeSection: {
-    marginBottom: 20,
-  },
-  qrSection: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-  qrCode: {
-    width: 150,
-    height: 150,
-  },
-  qrText: {
-    fontSize: 12,
-    color: "#6b7280",
+
+  // Attendee box — bordered, light gray bg
+  attendeeBox: {
     marginTop: 10,
+    padding: 8,
+    backgroundColor: COLORS.paper,
+    border: "1pt solid #D1D5DB",
   },
-  footer: {
-    backgroundColor: "#f9fafb",
-    padding: 15,
-    borderRadius: 8,
+
+  attendeeLabel: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 6,
+    color: COLORS.inkMuted,
+    letterSpacing: 1.5,
+    marginBottom: 3,
   },
-  footerText: {
-    fontSize: 10,
-    color: "#6b7280",
+
+  attendeeName: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 12,
+    color: COLORS.inkBase,
+  },
+
+  // Impact statement banner
+  impactBanner: {
+    marginTop: 8,
+    padding: 6,
+    backgroundColor: COLORS.leafGreen,
+  },
+
+  impactText: {
+    fontFamily: "Helvetica",
+    fontSize: 7,
+    color: COLORS.white,
+    lineHeight: 1.4,
+  },
+
+  // ── Dashed vertical divider ───────────────────────────────────────────────
+  divider: {
+    width: 1,
+    borderLeft: "1pt dashed #111827",
+    marginVertical: 12,
+  },
+
+  // ── Right column ─────────────────────────────────────────────────────────
+  rightColumn: {
+    flex: 1,
+    padding: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  // QR code border
+  qrBorder: {
+    border: "2pt solid #111827",
+    padding: 4,
+    marginBottom: 8,
+  },
+
+  qrCode: {
+    width: 90,
+    height: 90,
+  },
+
+  validText: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 7,
+    color: COLORS.inkBase,
+    letterSpacing: 1,
+    marginBottom: 10,
     textAlign: "center",
+  },
+
+  ticketIdLabel: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 6,
+    color: COLORS.inkMuted,
+    letterSpacing: 1.5,
+    marginBottom: 2,
+    textAlign: "center",
+  },
+
+  // Courier monospace for ticket ID — classic ticket stub aesthetic
+  ticketId: {
+    fontFamily: "Courier-Bold",
+    fontSize: 8,
+    color: COLORS.inkBase,
+    letterSpacing: 0.5,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+
+  orderLabel: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 6,
+    color: COLORS.inkMuted,
+    letterSpacing: 1.5,
+    marginBottom: 2,
+    textAlign: "center",
+  },
+
+  orderId: {
+    fontFamily: "Courier",
+    fontSize: 7,
+    color: COLORS.inkMuted,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+
+  poweredBy: {
+    fontFamily: "Helvetica",
+    fontSize: 6,
+    color: COLORS.inkFaint,
+    textAlign: "center",
+    lineHeight: 1.5,
+    marginTop: "auto",
   },
 });
