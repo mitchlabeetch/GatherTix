@@ -1,34 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64" role="img" aria-label="GatherTix logo">
-  <!-- GatherTix Full Horizontal Lockup — Neo-Editorial flat design -->
-  <!-- Icon mark (compact "G" ticket) -->
-  <rect x="0" y="8" width="20" height="8" fill="#2563EB" rx="1"/>
-  <circle cx="20" cy="12" r="3" fill="#F4F4F0"/>
-  <rect x="0" y="8" width="8" height="20" fill="#111827" rx="1"/>
-  <circle cx="4" cy="28" r="3" fill="#F4F4F0"/>
-  <rect x="12" y="26" width="14" height="8" fill="#2563EB" rx="1"/>
-  <circle cx="12" cy="30" r="3" fill="#F4F4F0"/>
-  <rect x="26" y="20" width="8" height="14" fill="#111827" rx="1"/>
-  <circle cx="30" cy="20" r="3" fill="#F4F4F0"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" role="img" aria-label="GatherTix — because it's better to gather">
+  <!--
+    GatherTix Header Logo — Neo-Editorial flat design
+    Compact ticket mark + Outfit bold wordmark + tagline.
+    Ink (#111827) | Paper (#F4F4F0) | Cobalt (#2563EB) | Leaf Green (#059669)
+  -->
 
-  <!-- Wordmark: "GatherTix" -->
+  <!-- ── Ticket icon mark (120×120 path scaled to 64px tall) ──────────── -->
+  <g transform="translate(0,8) scale(0.533)">
+    <path
+      d="M22 28 C22 23.582 25.582 20 30 20 L90 20 C94.418 20 98 23.582 98 28
+         L98 46 C93.582 46 90 49.582 90 54 C90 58.418 93.582 62 98 62
+         L98 92 C98 96.418 94.418 100 90 100 L30 100 C25.582 100 22 96.418 22 92
+         L22 72 C26.418 72 30 68.418 30 64 C30 59.582 26.418 56 22 56 Z"
+      fill="#111827"
+    />
+    <rect x="30" y="28" width="60" height="68" rx="2" fill="#F4F4F0"/>
+    <circle cx="30" cy="54" r="3" fill="#F4F4F0"/>
+    <circle cx="30" cy="62" r="3" fill="#F4F4F0"/>
+    <circle cx="30" cy="70" r="3" fill="#F4F4F0"/>
+    <circle cx="98" cy="54" r="3" fill="#F4F4F0"/>
+    <circle cx="98" cy="62" r="3" fill="#F4F4F0"/>
+    <circle cx="98" cy="70" r="3" fill="#F4F4F0"/>
+    <line x1="30" y1="64" x2="90" y2="64" stroke="#111827" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text
+      x="60" y="52"
+      font-family="'Outfit', system-ui, sans-serif"
+      font-size="28" font-weight="800"
+      fill="#2563EB"
+      text-anchor="middle" dominant-baseline="middle"
+      letter-spacing="-1"
+    >G</text>
+    <rect x="38" y="73" width="20" height="4" rx="1" fill="#2563EB"/>
+    <rect x="62" y="73" width="28" height="4" rx="1" fill="#9CA3AF"/>
+    <rect x="38" y="82" width="44" height="4" rx="1" fill="#D1D5DB"/>
+  </g>
+
+  <!-- ── Wordmark ─────────────────────────────────────────────────────── -->
   <text
-    x="44"
-    y="42"
+    x="64" y="48"
     font-family="'Outfit', system-ui, sans-serif"
-    font-size="32"
-    font-weight="800"
+    font-size="40" font-weight="800"
     fill="#111827"
-    letter-spacing="-0.5"
-  >GatherTix</text>
+    dominant-baseline="middle"
+    letter-spacing="-1.5"
+  >Gather<tspan fill="#059669">Tix</tspan></text>
 
-  <!-- Tagline -->
+  <!-- ── Tagline ──────────────────────────────────────────────────────── -->
   <text
-    x="44"
-    y="57"
+    x="65" y="68"
     font-family="'Plus Jakarta Sans', system-ui, sans-serif"
-    font-size="10"
-    font-weight="500"
+    font-size="11" font-weight="500"
     fill="#4B5563"
-    letter-spacing="0.5"
-  >because it&#39;s better to gather.</text>
+    dominant-baseline="middle"
+    letter-spacing="0.3"
+  >because it&#x27;s better to gather.</text>
 </svg>

@@ -31,6 +31,7 @@
 "use client";
 
 import * as React from "react";
+import "./TicketSelector.css";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -203,94 +204,31 @@ export function TicketSelector({
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div
-      style={{
-        maxWidth: "40rem",
-        margin: "0 auto",
-        fontFamily: "var(--font-body)",
-      }}
-    >
+    <div className="ts-root">
       {/* ── Ticket type list ─────────────────────────────────────────────── */}
-      <div
-        style={{
-          backgroundColor: "var(--bg-white)",
-          border: "1px solid var(--border-hard)",
-          borderRadius: "var(--radius-card)",
-          overflow: "hidden",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <div className="ts-card">
         {ticketTypes.map((ticket, index) => {
           const qty = quantities[ticket.id] ?? 0;
           const maxQty = Math.min(ticket.maxPerOrder ?? 10, ticket.available);
-          const isFirst = index === 0;
 
           return (
-            <div
-              key={ticket.id}
-              style={{
-                padding: "1.25rem 1.5rem",
-                borderTop: isFirst ? "none" : "1px solid var(--border-soft)",
-              }}
-            >
+            <div key={ticket.id} className="ts-ticket-row">
               {/* Row: name + price + quantity controls */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "1rem",
-                  flexWrap: "wrap",
-                }}
-              >
+              <div className="ts-ticket-row-inner">
                 {/* Left: name, description, price */}
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      marginBottom: "0.25rem",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "var(--font-size-base)",
-                        fontWeight: "var(--font-weight-semibold)",
-                        color: "var(--ink-base)",
-                      }}
-                    >
-                      {ticket.name}
-                    </span>
-                    {ticket.isVolunteer && (
-                      <TicketBadge label="Volunteer" color="var(--action-success)" />
-                    )}
-                    {ticket.isSlidingScale && (
-                      <TicketBadge label="Pay What You Can" color="var(--action-warning)" />
-                    )}
+                <div className="ts-ticket-info">
+                  <div className="ts-ticket-name-row">
+                    <span className="ts-ticket-name">{ticket.name}</span>
+                    {ticket.isVolunteer && <TicketBadge variant="volunteer" label="Volunteer" />}
+                    {ticket.isSlidingScale && <TicketBadge variant="sliding" label="Pay What You Can" />}
                   </div>
 
                   {ticket.description && (
-                    <p
-                      style={{
-                        fontSize: "var(--font-size-sm)",
-                        color: "var(--ink-muted)",
-                        margin: "0 0 0.25rem",
-                      }}
-                    >
-                      {ticket.description}
-                    </p>
+                    <p className="ts-ticket-description">{ticket.description}</p>
                   )}
 
                   {/* Price display */}
-                  <p
-                    style={{
-                      fontSize: "var(--font-size-sm)",
-                      fontWeight: "var(--font-weight-medium)",
-                      color: ticket.isVolunteer ? "var(--action-success)" : "var(--ink-base)",
-                    }}
-                  >
+                  <p className={`ts-ticket-price${ticket.isVolunteer ? " ts-ticket-price--volunteer" : ""}`}>
                     {ticket.isVolunteer
                       ? "FREE — Comp ticket"
                       : ticket.isSlidingScale
@@ -300,30 +238,13 @@ export function TicketSelector({
                 </div>
 
                 {/* Right: quantity controls */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                  }}
-                >
+                <div className="ts-qty-controls">
                   <QtyButton
                     label="−"
                     onClick={() => handleQuantityChange(ticket.id, -1)}
                     disabled={qty === 0}
                   />
-                  <span
-                    style={{
-                      minWidth: "1.5rem",
-                      textAlign: "center",
-                      fontFamily: "var(--font-body)",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight: "var(--font-weight-semibold)",
-                      color: "var(--ink-base)",
-                    }}
-                  >
-                    {qty}
-                  </span>
+                  <span className="ts-qty-value">{qty}</span>
                   <QtyButton
                     label="+"
                     onClick={() => handleQuantityChange(ticket.id, 1)}
@@ -334,31 +255,12 @@ export function TicketSelector({
 
               {/* Sliding scale price input — shown when ticket selected and isSlidingScale */}
               {ticket.isSlidingScale && qty > 0 && (
-                <div
-                  style={{
-                    marginTop: "1rem",
-                    padding: "0.75rem 1rem",
-                    backgroundColor: "var(--bg-paper)",
-                    border: "1px solid var(--border-hard)",
-                    borderRadius: "var(--radius-ui)",
-                  }}
-                >
-                  <label
-                    htmlFor={`sliding-${ticket.id}`}
-                    style={{
-                      display: "block",
-                      fontSize: "var(--font-size-xs)",
-                      fontWeight: "var(--font-weight-semibold)",
-                      letterSpacing: "var(--letter-spacing-widest)",
-                      textTransform: "uppercase",
-                      color: "var(--ink-muted)",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
+                <div className="ts-sliding-panel">
+                  <label htmlFor={`sliding-${ticket.id}`} className="ts-sliding-label">
                     Choose your price (min {formatCents(ticket.minPrice ?? 0, currency)})
                   </label>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ color: "var(--ink-muted)", fontSize: "var(--font-size-sm)" }}>$</span>
+                  <div className="ts-sliding-input-row">
+                    <span className="ts-sliding-currency">$</span>
                     <input
                       id={`sliding-${ticket.id}`}
                       type="number"
@@ -366,20 +268,10 @@ export function TicketSelector({
                       step="0.01"
                       value={((slidingPrices[ticket.id] ?? ticket.price) / 100).toFixed(2)}
                       onChange={(e) => handleSlidingPrice(ticket.id, e.target.value)}
-                      style={{
-                        width: "7rem",
-                        padding: "0.375rem 0.75rem",
-                        fontFamily: "var(--font-body)",
-                        fontSize: "var(--font-size-base)",
-                        color: "var(--ink-base)",
-                        backgroundColor: "var(--bg-white)",
-                        border: "1px solid var(--border-hard)",
-                        borderRadius: "var(--radius-ui)",
-                        outline: "none",
-                      }}
+                      className="ts-sliding-input"
                     />
                     {ticket.suggestedPrice && (
-                      <span style={{ fontSize: "var(--font-size-xs)", color: "var(--ink-muted)" }}>
+                      <span className="ts-sliding-suggested">
                         Suggested: {formatCents(ticket.suggestedPrice, currency)}
                       </span>
                     )}
@@ -392,50 +284,17 @@ export function TicketSelector({
       </div>
 
       {/* ── Optional donation block ──────────────────────────────────────── */}
-      <div
-        style={{
-          backgroundColor: "var(--bg-white)",
-          border: "1px solid var(--border-hard)",
-          borderRadius: "var(--radius-card)",
-          overflow: "hidden",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <div className="ts-card">
         {/* Impact statement header */}
-        <div
-          style={{
-            backgroundColor: "var(--action-success)",
-            color: "#FFFFFF",
-            padding: "0.875rem 1.5rem",
-            fontSize: "var(--font-size-sm)",
-            fontWeight: "var(--font-weight-semibold)",
-          }}
-        >
+        <div className="ts-donation-header">
           💚 100% of your donation goes directly to {organizationName}. No platform fees.
         </div>
 
-        <div style={{ padding: "1.25rem 1.5rem" }}>
-          <p
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--font-weight-semibold)",
-              color: "var(--ink-base)",
-              marginBottom: "0.75rem",
-            }}
-          >
-            Add a donation (optional)
-          </p>
+        <div className="ts-donation-body">
+          <p className="ts-donation-prompt">Add a donation (optional)</p>
 
           {/* Preset amount chips */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "0.5rem",
-              marginBottom: "0.75rem",
-            }}
-          >
+          <div className="ts-donation-chips">
             {PRESET_DONATIONS.map(({ label, cents }) => {
               const isSelected = donationCents === cents && customDonation === "";
               return (
@@ -443,23 +302,8 @@ export function TicketSelector({
                   key={cents}
                   type="button"
                   onClick={() => handlePresetDonation(cents)}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minWidth: "4rem",
-                    padding: "0.375rem 1rem",
-                    fontFamily: "var(--font-body)",
-                    fontSize: "var(--font-size-sm)",
-                    fontWeight: "var(--font-weight-semibold)",
-                    color: isSelected ? "#FFFFFF" : "var(--action-success)",
-                    backgroundColor: isSelected ? "var(--action-success)" : "var(--bg-white)",
-                    border: "1px solid var(--action-success)",
-                    borderRadius: "var(--radius-ui)",
-                    cursor: "pointer",
-                    boxShadow: isSelected ? "var(--shadow-flat-xs)" : "none",
-                    transition: "background-color 150ms ease-in-out, color 150ms ease-in-out",
-                  }}
+                  aria-pressed={isSelected}
+                  className="ts-donation-chip"
                 >
                   {label}
                 </button>
@@ -467,8 +311,8 @@ export function TicketSelector({
             })}
 
             {/* Custom donation input */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-              <span style={{ fontSize: "var(--font-size-sm)", color: "var(--ink-muted)" }}>$</span>
+            <div className="ts-custom-donation-row">
+              <span className="ts-custom-donation-currency">$</span>
               <input
                 type="number"
                 min="0"
@@ -476,17 +320,7 @@ export function TicketSelector({
                 placeholder="Other"
                 value={customDonation}
                 onChange={(e) => handleCustomDonation(e.target.value)}
-                style={{
-                  width: "5rem",
-                  padding: "0.375rem 0.5rem",
-                  fontFamily: "var(--font-body)",
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--ink-base)",
-                  backgroundColor: "var(--bg-white)",
-                  border: "1px solid var(--border-hard)",
-                  borderRadius: "var(--radius-ui)",
-                  outline: "none",
-                }}
+                className="ts-custom-donation-input"
               />
             </div>
           </div>
@@ -494,15 +328,7 @@ export function TicketSelector({
       </div>
 
       {/* ── Order summary ────────────────────────────────────────────────── */}
-      <div
-        style={{
-          backgroundColor: "var(--bg-paper)",
-          border: "1px solid var(--border-hard)",
-          borderRadius: "var(--radius-card)",
-          padding: "1.25rem 1.5rem",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <div className="ts-summary">
         {/* Ticket subtotals */}
         {ticketTypes
           .filter((t) => (quantities[t.id] ?? 0) > 0)
@@ -514,16 +340,7 @@ export function TicketSelector({
               ? (slidingPrices[ticket.id] ?? ticket.price)
               : ticket.price;
             return (
-              <div
-                key={ticket.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--ink-muted)",
-                  marginBottom: "0.5rem",
-                }}
-              >
+              <div key={ticket.id} className="ts-summary-line">
                 <span>
                   {ticket.name} × {qty}
                 </span>
@@ -536,34 +353,14 @@ export function TicketSelector({
 
         {/* Donation line */}
         {effectiveDonation > 0 && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontSize: "var(--font-size-sm)",
-              color: "var(--action-success)",
-              marginBottom: "0.5rem",
-            }}
-          >
+          <div className="ts-summary-donation-line">
             <span>💚 Donation</span>
             <span>{formatCents(effectiveDonation, currency)}</span>
           </div>
         )}
 
-        {/* Divider */}
-        <div
-          style={{
-            borderTop: "1px solid var(--border-hard)",
-            marginTop: "0.75rem",
-            paddingTop: "0.75rem",
-            display: "flex",
-            justifyContent: "space-between",
-            fontFamily: "var(--font-body)",
-            fontSize: "var(--font-size-base)",
-            fontWeight: "var(--font-weight-bold)",
-            color: "var(--ink-base)",
-          }}
-        >
+        {/* Total */}
+        <div className="ts-summary-total">
           <span>Total</span>
           <span>{formatCents(grandTotalCents, currency)}</span>
         </div>
@@ -574,63 +371,14 @@ export function TicketSelector({
         type="button"
         onClick={handleCheckout}
         disabled={checkoutDisabled}
-        style={{
-          display: "flex",
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "0.5rem",
-          padding: "1rem 1.5rem",
-          fontFamily: "var(--font-body)",
-          fontSize: "var(--font-size-base)",
-          fontWeight: "var(--font-weight-semibold)",
-          letterSpacing: "var(--letter-spacing-wide)",
-          color: "#FFFFFF",
-          backgroundColor: checkoutDisabled ? "var(--ink-faint)" : "var(--action-primary)",
-          border: "1px solid var(--ink-base)",
-          borderRadius: "var(--radius-ui)",
-          boxShadow: checkoutDisabled ? "none" : "var(--shadow-flat-md)",
-          cursor: checkoutDisabled ? "not-allowed" : "pointer",
-          transition: "transform 150ms ease-in-out, box-shadow 150ms ease-in-out",
-        }}
-        onMouseEnter={(e) => {
-          if (!checkoutDisabled) {
-            (e.currentTarget as HTMLButtonElement).style.transform = "translate(-1px, -1px)";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-flat-lg)";
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (!checkoutDisabled) {
-            (e.currentTarget as HTMLButtonElement).style.transform = "translate(0, 0)";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-flat-md)";
-          }
-        }}
-        onMouseDown={(e) => {
-          if (!checkoutDisabled) {
-            (e.currentTarget as HTMLButtonElement).style.transform = "translate(4px, 4px)";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
-          }
-        }}
-        onMouseUp={(e) => {
-          if (!checkoutDisabled) {
-            (e.currentTarget as HTMLButtonElement).style.transform = "translate(-1px, -1px)";
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-flat-lg)";
-          }
-        }}
+        aria-disabled={checkoutDisabled}
+        className="ts-checkout-btn"
       >
         🎟 Checkout as Guest
       </button>
 
       {/* Guest-checkout assurance — no sign-up prompt */}
-      <p
-        style={{
-          marginTop: "0.75rem",
-          textAlign: "center",
-          fontFamily: "var(--font-body)",
-          fontSize: "var(--font-size-xs)",
-          color: "var(--ink-muted)",
-        }}
-      >
+      <p className="ts-checkout-note">
         No account required. You&apos;ll receive your tickets by email.
       </p>
     </div>
@@ -654,35 +402,7 @@ function QtyButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={label === "+" ? "Increase quantity" : "Decrease quantity"}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "2rem",
-        height: "2rem",
-        fontFamily: "var(--font-body)",
-        fontSize: "var(--font-size-lg)",
-        fontWeight: "var(--font-weight-bold)",
-        lineHeight: 1,
-        color: disabled ? "var(--ink-faint)" : "var(--ink-base)",
-        backgroundColor: "var(--bg-white)",
-        border: `1px solid ${disabled ? "var(--border-soft)" : "var(--border-hard)"}`,
-        borderRadius: "var(--radius-ui)",
-        boxShadow: disabled ? "none" : "var(--shadow-flat-xs)",
-        cursor: disabled ? "not-allowed" : "pointer",
-        transition: "transform 100ms ease-in-out, box-shadow 100ms ease-in-out",
-      }}
-      onMouseDown={(e) => {
-        if (!disabled)
-          (e.currentTarget as HTMLButtonElement).style.transform = "translate(1px, 1px)";
-      }}
-      onMouseUp={(e) => {
-        if (!disabled)
-          (e.currentTarget as HTMLButtonElement).style.transform = "translate(0, 0)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.transform = "translate(0, 0)";
-      }}
+      className="ts-qty-btn"
     >
       {label}
     </button>
@@ -691,23 +411,9 @@ function QtyButton({
 
 // ── TicketBadge — label chip for ticket type tags ─────────────────────────────
 
-function TicketBadge({ label, color }: { label: string; color: string }) {
+function TicketBadge({ variant, label }: { variant: "volunteer" | "sliding"; label: string }) {
   return (
-    <span
-      style={{
-        display: "inline-block",
-        padding: "0.125rem 0.5rem",
-        fontFamily: "var(--font-body)",
-        fontSize: "var(--font-size-xs)",
-        fontWeight: "var(--font-weight-semibold)",
-        letterSpacing: "var(--letter-spacing-wide)",
-        color: "#FFFFFF",
-        backgroundColor: color,
-        borderRadius: "var(--radius-ui)",
-      }}
-    >
-      {label}
-    </span>
+    <span className={`ts-badge ts-badge--${variant}`}>{label}</span>
   );
 }
 

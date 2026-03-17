@@ -14,17 +14,23 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { TRPCProvider } from "@/components/providers/trpc-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Ticketing Platform",
-  description: "Open source self-hosted ticketing platform",
+  title: {
+    default: "GatherTix — because it's better to gather",
+    template: "%s | GatherTix",
+  },
+  description:
+    "Self-hosted, open-source ticketing for non-profits and community groups. Zero platform fees.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -34,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

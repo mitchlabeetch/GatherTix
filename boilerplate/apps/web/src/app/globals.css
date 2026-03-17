@@ -1,3 +1,18 @@
+/*
+ * GatherTix — Web App Global Styles
+ *
+ * Font imports: Outfit (display/headings) and Plus Jakarta Sans (body/UI).
+ * Self-hosted via @fontsource to avoid Google Fonts CDN dependency and ensure
+ * offline capability and privacy compliance.
+ */
+@import "@fontsource/outfit/500.css";
+@import "@fontsource/outfit/700.css";
+@import "@fontsource/outfit/800.css";
+@import "@fontsource/plus-jakarta-sans/400.css";
+@import "@fontsource/plus-jakarta-sans/500.css";
+@import "@fontsource/plus-jakarta-sans/600.css";
+@import "@fontsource/plus-jakarta-sans/700.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

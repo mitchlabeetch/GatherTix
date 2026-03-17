@@ -12,11 +12,14 @@
  *   - NO terracotta/orange-clay colors
  *
  * Typography:
- *   Display/Headings: Outfit (Google Fonts)
- *   UI/Body:          Plus Jakarta Sans (Google Fonts)
+ *   Display/Headings: Outfit (Google Fonts — OFL-1.1)
+ *   UI/Body:          Plus Jakarta Sans (Google Fonts — OFL-1.1)
+ *
+ * Fonts are self-hosted via @fontsource packages in each consuming app:
+ *   - apps/web: imports in src/app/globals.css
+ *   - packages/email: React Email uses raw font-face declarations or CDN fallback
+ *   - packages/pdf: React PDF bundles font files directly (see packages/pdf/src/fonts)
  */
-
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 /* ── Force Light Mode ─────────────────────────────────────────────────────── */
 /* Dark mode is explicitly disabled for consistent PDF printing and email rendering */

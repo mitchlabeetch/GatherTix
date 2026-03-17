@@ -1,0 +1,167 @@
+/*
+ * GatherTix — EventHero component styles
+ * Copyright (C) 2024 GatherTix Contributors — AGPL-3.0-or-later
+ *
+ * Uses design tokens from design-tokens.css (Neo-Editorial design system).
+ * All colour, spacing, and typography values are CSS-variable references —
+ * do NOT hard-code raw values here; update design-tokens.css instead.
+ */
+
+/* ── Hero section ─────────────────────────────────────────────────────────── */
+
+.eh-section {
+  background-color: var(--bg-paper);
+  border-bottom: var(--border-width-2) solid var(--ink-base);
+  padding: var(--space-16) var(--space-6);
+}
+
+.eh-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  display: grid;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+/* Single-column (no image) */
+.eh-inner--text-only {
+  grid-template-columns: 1fr;
+}
+
+/* Two-column (with image) */
+.eh-inner--with-image {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 48rem) {
+  .eh-inner--with-image {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Text column ──────────────────────────────────────────────────────────── */
+
+.eh-org-label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-widest);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: var(--space-3);
+}
+
+.eh-event-name {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.05;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--ink-base);
+  margin-bottom: var(--space-4);
+}
+
+.eh-event-name--no-tagline {
+  margin-bottom: var(--space-6);
+}
+
+.eh-tagline {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  color: var(--ink-muted);
+  margin-bottom: var(--space-6);
+  line-height: var(--line-height-snug);
+}
+
+/* ── Event meta (date / venue) ────────────────────────────────────────────── */
+
+.eh-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-10);
+}
+
+.eh-meta-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--ink-base);
+}
+
+.eh-meta-icon {
+  font-size: 1rem;
+}
+
+/* ── CTA button ───────────────────────────────────────────────────────────── */
+
+.eh-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-8);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--action-primary-text);
+  background-color: var(--action-primary);
+  border: var(--border-width-1) solid var(--ink-base);
+  border-radius: var(--radius-ui);
+  box-shadow: var(--shadow-flat-md);
+  cursor: pointer;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.eh-cta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-flat-lg);
+}
+
+.eh-cta:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.eh-cta:disabled,
+.eh-cta[aria-disabled="true"] {
+  background-color: var(--ink-faint);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.eh-cta:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ── Image column ─────────────────────────────────────────────────────────── */
+
+.eh-image-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border: var(--border-width-2) solid var(--ink-base);
+  box-shadow: var(--shadow-flat-md);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.eh-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%);
+  transition: filter var(--transition-slow);
+}
+
+.eh-image-wrap:hover .eh-image {
+  filter: grayscale(0%);
+}

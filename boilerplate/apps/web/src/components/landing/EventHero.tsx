@@ -26,6 +26,7 @@
  */
 
 import * as React from "react";
+import "./EventHero.css";
 
 interface EventHeroProps {
   /** Full event title — displayed in Outfit display font */
@@ -63,80 +64,25 @@ export function EventHero({
   organizationName,
 }: EventHeroProps) {
   return (
-    <section
-      style={{
-        backgroundColor: "var(--bg-paper)",
-        borderBottom: "2px solid var(--ink-base)",
-        padding: "4rem 1.5rem",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "72rem",
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: imageUrl ? "1fr 1fr" : "1fr",
-          gap: "3rem",
-          alignItems: "center",
-        }}
-      >
+    <section className="eh-section">
+      <div className={`eh-inner ${imageUrl ? "eh-inner--with-image" : "eh-inner--text-only"}`}>
         {/* ── Text column ─────────────────────────────────────────────────── */}
         <div>
           {organizationName && (
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--font-size-xs)",
-                fontWeight: "var(--font-weight-semibold)",
-                letterSpacing: "var(--letter-spacing-widest)",
-                textTransform: "uppercase",
-                color: "var(--ink-muted)",
-                marginBottom: "0.75rem",
-              }}
-            >
-              {organizationName}
-            </p>
+            <p className="eh-org-label">{organizationName}</p>
           )}
 
           {/* Event name — Outfit display font, tight tracking */}
-          <h1
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
-              fontWeight: "800",
-              lineHeight: "1.05",
-              letterSpacing: "-0.025em",
-              color: "var(--ink-base)",
-              marginBottom: tagline ? "1rem" : "1.5rem",
-            }}
-          >
+          <h1 className={`eh-event-name${!tagline ? " eh-event-name--no-tagline" : ""}`}>
             {eventName}
           </h1>
 
           {tagline && (
-            <p
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "var(--font-size-xl)",
-                fontWeight: "var(--font-weight-medium)",
-                color: "var(--ink-muted)",
-                marginBottom: "1.5rem",
-                lineHeight: "var(--line-height-snug)",
-              }}
-            >
-              {tagline}
-            </p>
+            <p className="eh-tagline">{tagline}</p>
           )}
 
           {/* Event meta */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              marginBottom: "2.5rem",
-            }}
-          >
+          <div className="eh-meta">
             <EventMetaRow icon="📅" text={dateTime} />
             <EventMetaRow icon="📍" text={venue} />
           </div>
@@ -146,47 +92,8 @@ export function EventHero({
             type="button"
             onClick={onCtaClick}
             disabled={ctaDisabled}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "1rem 2rem",
-              fontFamily: "var(--font-body)",
-              fontSize: "var(--font-size-base)",
-              fontWeight: "var(--font-weight-semibold)",
-              letterSpacing: "var(--letter-spacing-wide)",
-              color: "#FFFFFF",
-              backgroundColor: ctaDisabled ? "var(--ink-faint)" : "var(--action-primary)",
-              border: "1px solid var(--ink-base)",
-              borderRadius: "var(--radius-ui)",
-              boxShadow: ctaDisabled ? "none" : "var(--shadow-flat-md)",
-              cursor: ctaDisabled ? "not-allowed" : "pointer",
-              transition: "transform 150ms ease-in-out, box-shadow 150ms ease-in-out",
-            }}
-            onMouseEnter={(e) => {
-              if (!ctaDisabled) {
-                (e.currentTarget as HTMLButtonElement).style.transform = "translate(-2px, -2px)";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-flat-lg)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!ctaDisabled) {
-                (e.currentTarget as HTMLButtonElement).style.transform = "translate(0, 0)";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-flat-md)";
-              }
-            }}
-            onMouseDown={(e) => {
-              if (!ctaDisabled) {
-                (e.currentTarget as HTMLButtonElement).style.transform = "translate(4px, 4px)";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
-              }
-            }}
-            onMouseUp={(e) => {
-              if (!ctaDisabled) {
-                (e.currentTarget as HTMLButtonElement).style.transform = "translate(-2px, -2px)";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow = "var(--shadow-flat-lg)";
-              }
-            }}
+            aria-disabled={ctaDisabled}
+            className="eh-cta"
           >
             {ctaDisabled ? "Sold Out" : ctaLabel}
           </button>
@@ -194,36 +101,12 @@ export function EventHero({
 
         {/* ── Image column — grayscale → color on hover ────────────────── */}
         {imageUrl && (
-          <div
-            style={{
-              position: "relative",
-              aspectRatio: "1 / 1",
-              border: "2px solid var(--ink-base)",
-              boxShadow: "var(--shadow-flat-md)",
-              borderRadius: "var(--radius-card)",
-              overflow: "hidden",
-            }}
-            onMouseEnter={(e) => {
-              const img = e.currentTarget.querySelector("img");
-              if (img) img.style.filter = "grayscale(0%)";
-            }}
-            onMouseLeave={(e) => {
-              const img = e.currentTarget.querySelector("img");
-              if (img) img.style.filter = "grayscale(100%)";
-            }}
-          >
+          <div className="eh-image-wrap">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageUrl}
               alt={imageAlt}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
-                filter: "grayscale(100%)",
-                transition: "filter 300ms ease-in-out",
-              }}
+              className="eh-image"
             />
           </div>
         )}
@@ -236,18 +119,8 @@ export function EventHero({
 
 function EventMetaRow({ icon, text }: { icon: string; text: string }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "0.5rem",
-        fontFamily: "var(--font-body)",
-        fontSize: "var(--font-size-base)",
-        fontWeight: "var(--font-weight-medium)",
-        color: "var(--ink-base)",
-      }}
-    >
-      <span role="img" aria-hidden="true" style={{ fontSize: "1rem" }}>
+    <div className="eh-meta-row">
+      <span role="img" aria-hidden="true" className="eh-meta-icon">
         {icon}
       </span>
       <span>{text}</span>
