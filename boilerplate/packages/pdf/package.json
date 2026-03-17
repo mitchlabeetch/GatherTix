@@ -23,20 +23,20 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@react-pdf/renderer": "^4.0.0",
+    "@react-pdf/renderer": "^4.3.2",
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "@ticketing/eslint-config": "workspace:*",
     "@ticketing/typescript-config": "workspace:*",
-    "@types/node": "^20.16.11",
-    "@types/qrcode": "^1.5.5",
-    "@types/react": "^18.3.11",
+    "@types/node": "^20.19.37",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.2.14",
     "eslint": "^8.57.1",
-    "react": "^18.3.1",
-    "typescript": "^5.6.3"
+    "react": "^19.2.4",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "react": "^18.0.0"
+    "react": "^19.0.0"
   }
 }
