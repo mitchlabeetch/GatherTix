@@ -12,11 +12,13 @@
  *   - NO terracotta/orange-clay colors
  *
  * Typography:
- *   Display/Headings: Outfit (Google Fonts)
- *   UI/Body:          Plus Jakarta Sans (Google Fonts)
+ *   Display/Headings: Outfit (Google Fonts — OFL-1.1)
+ *   UI/Body:          Plus Jakarta Sans (Google Fonts — OFL-1.1)
+ *
+ * Fonts are self-hosted via @fontsource in the web app (globals.css).
+ * This file is also used by packages/email and packages/pdf which load
+ * fonts via their own @import or server-side font injection.
  */
-
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 /* ── Force Light Mode ─────────────────────────────────────────────────────── */
 /* Dark mode is explicitly disabled for consistent PDF printing and email rendering */

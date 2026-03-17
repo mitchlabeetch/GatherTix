@@ -1,17 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="GatherTix icon">
-  <!-- Interlocking tickets forming "G" shape — Neo-Editorial flat design -->
-  <!-- Background -->
-  <rect width="64" height="64" fill="#F4F4F0" rx="4"/>
-  <!-- Ticket 1 (horizontal, top) -->
-  <rect x="8" y="8" width="36" height="14" fill="#2563EB" rx="2"/>
-  <circle cx="44" cy="15" r="5" fill="#F4F4F0"/>
-  <!-- Ticket 2 (vertical, left) -->
-  <rect x="8" y="8" width="14" height="36" fill="#111827" rx="2"/>
-  <circle cx="15" cy="44" r="5" fill="#F4F4F0"/>
-  <!-- Ticket 3 (horizontal, bottom-right — forms the gap of "G") -->
-  <rect x="22" y="38" width="22" height="14" fill="#2563EB" rx="2"/>
-  <circle cx="22" cy="45" r="5" fill="#F4F4F0"/>
-  <!-- Ticket 4 (vertical, right) -->
-  <rect x="44" y="30" width="12" height="22" fill="#111827" rx="2"/>
-  <circle cx="50" cy="30" r="5" fill="#F4F4F0"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="GatherTix icon">
+  <!--
+    GatherTix App Icon — Neo-Editorial flat design
+    A stylised ticket stub: hard edges, black border, flat colours.
+    Ink (#111827) body, Paper (#F4F4F0) background & perforations, Cobalt (#2563EB) accent.
+  -->
+
+  <!-- Warm paper background -->
+  <rect width="120" height="120" rx="16" fill="#F4F4F0"/>
+
+  <!-- Outer ticket body -->
+  <path
+    d="M22 28
+       C22 23.582 25.582 20 30 20
+       L90 20
+       C94.418 20 98 23.582 98 28
+       L98 46
+       C93.582 46 90 49.582 90 54
+       C90 58.418 93.582 62 98 62
+       L98 92
+       C98 96.418 94.418 100 90 100
+       L30 100
+       C25.582 100 22 96.418 22 92
+       L22 72
+       C26.418 72 30 68.418 30 64
+       C30 59.582 26.418 56 22 56
+       Z"
+    fill="#111827"
+  />
+
+  <!-- Inner paper cut-out (ticket face) -->
+  <rect x="30" y="28" width="60" height="68" rx="2" fill="#F4F4F0"/>
+
+  <!-- Perforation dots along the tear line -->
+  <circle cx="30" cy="54" r="3" fill="#F4F4F0"/>
+  <circle cx="30" cy="62" r="3" fill="#F4F4F0"/>
+  <circle cx="30" cy="70" r="3" fill="#F4F4F0"/>
+  <circle cx="98" cy="54" r="3" fill="#F4F4F0"/>
+  <circle cx="98" cy="62" r="3" fill="#F4F4F0"/>
+  <circle cx="98" cy="70" r="3" fill="#F4F4F0"/>
+
+  <!-- Dashed tear line -->
+  <line x1="30" y1="64" x2="90" y2="64" stroke="#111827" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- "G" letterform in cobalt blue — upper ticket area -->
+  <text
+    x="60"
+    y="52"
+    font-family="'Outfit', system-ui, sans-serif"
+    font-size="28"
+    font-weight="800"
+    fill="#2563EB"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    letter-spacing="-1"
+  >G</text>
+
+  <!-- Stub area — small accent bar -->
+  <rect x="38" y="73" width="20" height="4" rx="1" fill="#2563EB"/>
+  <rect x="62" y="73" width="28" height="4" rx="1" fill="#9CA3AF"/>
+  <rect x="38" y="82" width="44" height="4" rx="1" fill="#D1D5DB"/>
 </svg>

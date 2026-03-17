@@ -178,11 +178,23 @@ export class ZeffyPaymentProvider {
 
     const receivedHex = signatureParts[1];
 
+    // Reject malformed hex strings before buffer conversion — Buffer.from(str, 'hex')
+    // silently truncates odd-length strings, which can cause timingSafeEqual to throw.
+    if (receivedHex.length % 2 !== 0) {
+      return { valid: false, error: "Invalid signature format; hex string must have an even length." };
+    }
+
     // Compute expected HMAC-SHA256
     const expectedHex = crypto
       .createHmac("sha256", this.webhookSecret)
       .update(rawBody)
       .digest("hex");
+
+    // Guard against length mismatch before constant-time comparison
+    // (timingSafeEqual throws if buffers have different byte lengths)
+    if (receivedHex.length !== expectedHex.length) {
+      return { valid: false, error: "Signature mismatch — webhook rejected." };
+    }
 
     // Constant-time comparison to prevent timing attacks
     const signaturesMatch = crypto.timingSafeEqual(

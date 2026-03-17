@@ -28,7 +28,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Ticket, LogOut, User, Settings, Building2 } from "lucide-react";
+import {
+  LogOut, User, Settings, Building2,
+} from "lucide-react";
 import { toast } from "sonner";
 
 export function DashboardHeader() {
@@ -51,8 +53,9 @@ export function DashboardHeader() {
       <div className="container flex h-14 items-center">
         <div className="mr-4 flex">
           <Link href="/dashboard" className="mr-6 flex items-center space-x-2">
-            <Ticket className="h-6 w-6" />
-            <span className="font-bold hidden md:inline">Ticketing Platform</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icon.svg" alt="GatherTix" width={28} height={28} />
+            <span className="font-bold hidden md:inline">GatherTix</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
