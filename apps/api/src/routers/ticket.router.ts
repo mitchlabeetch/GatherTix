@@ -94,66 +94,64 @@ export const ticketRouter = router({
   /**
    * Get ticket by ID
    */
-  getById: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const ticket = await ctx.prisma.ticket.findUnique({
-        where: { id: input.id },
-        include: {
-          event: {
-            select: {
-              id: true,
-              title: true,
-              startDate: true,
-              venueName: true,
-              organizationId: true,
-            },
-          },
-          ticketType: {
-            select: {
-              name: true,
-              price: true,
-            },
-          },
-          order: {
-            select: {
-              orderNumber: true,
-              customerEmail: true,
-            },
-          },
-          checkIns: {
-            orderBy: { checkedInAt: "desc" },
-            take: 1,
+  getById: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const ticket = await ctx.prisma.ticket.findUnique({
+      where: { id: input.id },
+      include: {
+        event: {
+          select: {
+            id: true,
+            title: true,
+            startDate: true,
+            venueName: true,
+            organizationId: true,
           },
         },
-      });
-
-      if (!ticket) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Ticket not found",
-        });
-      }
-
-      // Check access
-      const membership = await ctx.prisma.organizationMember.findUnique({
-        where: {
-          organizationId_userId: {
-            organizationId: ticket.event.organizationId,
-            userId: ctx.user.id,
+        ticketType: {
+          select: {
+            name: true,
+            price: true,
           },
         },
+        order: {
+          select: {
+            orderNumber: true,
+            customerEmail: true,
+          },
+        },
+        checkIns: {
+          orderBy: { checkedInAt: "desc" },
+          take: 1,
+        },
+      },
+    });
+
+    if (!ticket) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Ticket not found",
       });
+    }
 
-      if (!membership && ctx.user.role !== "ADMIN") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You don't have access to this ticket",
-        });
-      }
+    // Check access
+    const membership = await ctx.prisma.organizationMember.findUnique({
+      where: {
+        organizationId_userId: {
+          organizationId: ticket.event.organizationId,
+          userId: ctx.user.id,
+        },
+      },
+    });
 
-      return ticket;
-    }),
+    if (!membership && ctx.user.role !== "ADMIN") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You don't have access to this ticket",
+      });
+    }
+
+    return ticket;
+  }),
 
   /**
    * Validate QR token (for check-in)
@@ -334,29 +332,34 @@ export const ticketRouter = router({
     .query(async ({ ctx, input }) => {
       const { eventId } = input;
 
-      const [totalTickets, checkedInTickets, ticketTypeStats] = await Promise.all([
-        ctx.prisma.ticket.count({
-          where: { eventId, status: "ACTIVE" },
-        }),
-        ctx.prisma.ticket.count({
-          where: { eventId, status: "ACTIVE", checkedIn: true },
-        }),
-        ctx.prisma.ticket.groupBy({
-          by: ["ticketTypeId"],
-          where: { eventId },
-          _count: {
-            id: true,
-          },
-          _sum: {
-            checkedIn: true,
-          },
-        }),
-      ]);
+      const [totalTickets, checkedInTickets, ticketTypeTotals, ticketTypeCheckedInCounts] =
+        await Promise.all([
+          ctx.prisma.ticket.count({
+            where: { eventId, status: "ACTIVE" },
+          }),
+          ctx.prisma.ticket.count({
+            where: { eventId, status: "ACTIVE", checkedIn: true },
+          }),
+          ctx.prisma.ticket.groupBy({
+            by: ["ticketTypeId"],
+            where: { eventId },
+            _count: {
+              id: true,
+            },
+          }),
+          ctx.prisma.ticket.groupBy({
+            by: ["ticketTypeId"],
+            where: { eventId, checkedIn: true },
+            _count: {
+              id: true,
+            },
+          }),
+        ]);
 
       // Get ticket type names
       const ticketTypes = await ctx.prisma.ticketType.findMany({
         where: {
-          id: { in: ticketTypeStats.map((s) => s.ticketTypeId) },
+          id: { in: ticketTypeTotals.map((stat) => stat.ticketTypeId) },
         },
         select: {
           id: true,
@@ -364,10 +367,14 @@ export const ticketRouter = router({
         },
       });
 
-      const typeStats = ticketTypeStats.map((stat) => ({
+      const checkedInByType = new Map(
+        ticketTypeCheckedInCounts.map((stat) => [stat.ticketTypeId, stat._count.id])
+      );
+
+      const typeStats = ticketTypeTotals.map((stat) => ({
         name: ticketTypes.find((t) => t.id === stat.ticketTypeId)?.name || "Unknown",
         total: stat._count.id,
-        checkedIn: stat._sum.checkedIn || 0,
+        checkedIn: checkedInByType.get(stat.ticketTypeId) || 0,
       }));
 
       return {

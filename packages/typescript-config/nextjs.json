@@ -8,6 +8,7 @@
     "moduleResolution": "bundler",
     "allowJs": true,
     "jsx": "preserve",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "noEmit": true,
     "incremental": true,
     "resolveJsonModule": true,

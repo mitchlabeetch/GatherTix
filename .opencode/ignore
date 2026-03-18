@@ -1,0 +1,108 @@
+# OpenCode Ignore File
+# Prevents memory leaks by restricting AI indexing of auto-generated and binary files
+# Based on: https://github.com/mitchlabeetch/GatherTix project structure
+
+# =============================================================================
+# BUILD OUTPUTS (Never index compiled/bundled code)
+# =============================================================================
+build/
+dist/
+.next/
+out/
+.turbo/
+.vercel/
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# =============================================================================
+# DEPENDENCIES (Node modules and package caches)
+# =============================================================================
+node_modules/
+.pnp/
+.pnp.js
+packages/*/node_modules/
+apps/*/node_modules/
+
+# =============================================================================
+# TYPESCRIPT & BUILD ARTIFACTS
+# =============================================================================
+*.tsbuildinfo
+next-env.d.ts
+src/generated/
+
+# =============================================================================
+# DATABASE & ORM (Prisma, generated schemas, DB files)
+# =============================================================================
+*.db
+*.db-journal
+dump.rdb
+prisma/generated/
+
+# =============================================================================
+# LOGS & DEBUG (Massive text files that leak context)
+# =============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# =============================================================================
+# ENVIRONMENT & SECRETS (Never read by AI)
+# =============================================================================
+.env
+.env.local
+.env*.local
+.env.*.local
+
+# =============================================================================
+# IDE & EDITOR (Binary configs, session data)
+# =============================================================================
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =============================================================================
+# UPLOADS & MEDIA (Binary/large files)
+# =============================================================================
+uploads/
+storage/
+
+# =============================================================================
+# DOCKER & CONTAINERS
+# =============================================================================
+.docker/
+
+# =============================================================================
+# MINIO / REDIS CACHE
+# =============================================================================
+.minio.sys/
+
+# =============================================================================
+# GIT INTERNALS (Don't index git metadata)
+# =============================================================================
+.git/
+.gitignore
+.gitattributes
+
+# =============================================================================
+# LOCK FILES (Large, not useful for AI context)
+# =============================================================================
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# =============================================================================
+# AI SESSION LOGS (Prevents context duplication leaks)
+# =============================================================================
+qlogs/
+.qwen/

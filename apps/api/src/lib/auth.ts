@@ -38,7 +38,6 @@ export const lucia = new Lucia(adapter, {
       secure: env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      httpOnly: true,
     },
     name: "auth_session",
   },

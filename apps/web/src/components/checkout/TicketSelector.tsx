@@ -108,18 +108,15 @@ export function TicketSelector({
   currency = "USD",
 }: TicketSelectorProps) {
   // Quantity for each ticket type (keyed by id)
-  const [quantities, setQuantities] = React.useState<Record<string, number>>(
-    () => Object.fromEntries(ticketTypes.map((t) => [t.id, 0]))
+  const [quantities, setQuantities] = React.useState<Record<string, number>>(() =>
+    Object.fromEntries(ticketTypes.map((t) => [t.id, 0]))
   );
 
   // Chosen price in cents for sliding-scale tickets (keyed by id)
-  const [slidingPrices, setSlidingPrices] = React.useState<Record<string, number>>(
-    () =>
-      Object.fromEntries(
-        ticketTypes
-          .filter((t) => t.isSlidingScale)
-          .map((t) => [t.id, t.suggestedPrice ?? t.price])
-      )
+  const [slidingPrices, setSlidingPrices] = React.useState<Record<string, number>>(() =>
+    Object.fromEntries(
+      ticketTypes.filter((t) => t.isSlidingScale).map((t) => [t.id, t.suggestedPrice ?? t.price])
+    )
   );
 
   // Selected preset donation in cents (0 = no donation)
@@ -135,8 +132,8 @@ export function TicketSelector({
     const unitPrice = t.isSlidingScale
       ? (slidingPrices[t.id] ?? t.price)
       : t.isVolunteer
-      ? 0
-      : t.price;
+        ? 0
+        : t.price;
     return sum + unitPrice * qty;
   }, 0);
 
@@ -195,8 +192,8 @@ export function TicketSelector({
         priceCents: t.isVolunteer
           ? 0
           : t.isSlidingScale
-          ? (slidingPrices[t.id] ?? t.price)
-          : t.price,
+            ? (slidingPrices[t.id] ?? t.price)
+            : t.price,
       }));
     onCheckout(selections, effectiveDonation);
   }
@@ -220,7 +217,9 @@ export function TicketSelector({
                   <div className="ts-ticket-name-row">
                     <span className="ts-ticket-name">{ticket.name}</span>
                     {ticket.isVolunteer && <TicketBadge variant="volunteer" label="Volunteer" />}
-                    {ticket.isSlidingScale && <TicketBadge variant="sliding" label="Pay What You Can" />}
+                    {ticket.isSlidingScale && (
+                      <TicketBadge variant="sliding" label="Pay What You Can" />
+                    )}
                   </div>
 
                   {ticket.description && (
@@ -228,12 +227,14 @@ export function TicketSelector({
                   )}
 
                   {/* Price display */}
-                  <p className={`ts-ticket-price${ticket.isVolunteer ? " ts-ticket-price--volunteer" : ""}`}>
+                  <p
+                    className={`ts-ticket-price${ticket.isVolunteer ? "ts-ticket-price--volunteer" : ""}`}
+                  >
                     {ticket.isVolunteer
                       ? "FREE — Comp ticket"
                       : ticket.isSlidingScale
-                      ? `${formatCents(ticket.minPrice ?? 0, currency)} – ${formatCents(ticket.suggestedPrice ?? ticket.price, currency)} suggested`
-                      : formatCents(ticket.price, currency)}
+                        ? `${formatCents(ticket.minPrice ?? 0, currency)} – ${formatCents(ticket.suggestedPrice ?? ticket.price, currency)} suggested`
+                        : formatCents(ticket.price, currency)}
                   </p>
                 </div>
 
@@ -267,7 +268,9 @@ export function TicketSelector({
                       min={((ticket.minPrice ?? 0) / 100).toFixed(2)}
                       step="0.01"
                       value={((slidingPrices[ticket.id] ?? ticket.price) / 100).toFixed(2)}
-                      onChange={(e) => handleSlidingPrice(ticket.id, e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleSlidingPrice(ticket.id, (e.currentTarget as HTMLInputElement).value)
+                      }
                       className="ts-sliding-input"
                     />
                     {ticket.suggestedPrice && (
@@ -319,7 +322,9 @@ export function TicketSelector({
                 step="1"
                 placeholder="Other"
                 value={customDonation}
-                onChange={(e) => handleCustomDonation(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleCustomDonation((e.currentTarget as HTMLInputElement).value)
+                }
                 className="ts-custom-donation-input"
               />
             </div>
@@ -337,16 +342,14 @@ export function TicketSelector({
             const unitPrice = ticket.isVolunteer
               ? 0
               : ticket.isSlidingScale
-              ? (slidingPrices[ticket.id] ?? ticket.price)
-              : ticket.price;
+                ? (slidingPrices[ticket.id] ?? ticket.price)
+                : ticket.price;
             return (
               <div key={ticket.id} className="ts-summary-line">
                 <span>
                   {ticket.name} × {qty}
                 </span>
-                <span>
-                  {ticket.isVolunteer ? "FREE" : formatCents(unitPrice * qty, currency)}
-                </span>
+                <span>{ticket.isVolunteer ? "FREE" : formatCents(unitPrice * qty, currency)}</span>
               </div>
             );
           })}
@@ -412,9 +415,7 @@ function QtyButton({
 // ── TicketBadge — label chip for ticket type tags ─────────────────────────────
 
 function TicketBadge({ variant, label }: { variant: "volunteer" | "sliding"; label: string }) {
-  return (
-    <span className={`ts-badge ts-badge--${variant}`}>{label}</span>
-  );
+  return <span className={`ts-badge ts-badge--${variant}`}>{label}</span>;
 }
 
 export default TicketSelector;

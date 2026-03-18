@@ -17,7 +17,11 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, orgMemberProcedure, publicProcedure } from "../trpc/trpc";
 import { generateUniqueSlug } from "@ticketing/shared/utils";
-import { createEventSchema, updateEventSchema, createTicketTypeSchema } from "@ticketing/shared/validations";
+import {
+  createEventSchema,
+  updateEventSchema,
+  createTicketTypeSchema,
+} from "@ticketing/shared/validations";
 
 export const eventRouter = router({
   /**
@@ -230,70 +234,68 @@ export const eventRouter = router({
   /**
    * Get event by ID (for editing)
    */
-  getById: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const event = await ctx.prisma.event.findUnique({
-        where: { id: input.id },
-        include: {
-          organization: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-          },
-          ticketTypes: {
-            orderBy: { sortOrder: "asc" },
-          },
-          _count: {
-            select: {
-              orders: true,
-              tickets: true,
-            },
+  getById: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const event = await ctx.prisma.event.findUnique({
+      where: { id: input.id },
+      include: {
+        organization: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
           },
         },
-      });
-
-      if (!event) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Event not found",
-        });
-      }
-
-      // Check if user is a member of the organization
-      const membership = await ctx.prisma.organizationMember.findUnique({
-        where: {
-          organizationId_userId: {
-            organizationId: event.organizationId,
-            userId: ctx.user.id,
+        ticketTypes: {
+          orderBy: { sortOrder: "asc" },
+        },
+        _count: {
+          select: {
+            orders: true,
+            tickets: true,
           },
         },
+      },
+    });
+
+    if (!event) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Event not found",
       });
+    }
 
-      if (!membership && ctx.user.role !== "ADMIN") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You don't have access to this event",
-        });
-      }
+    // Check if user is a member of the organization
+    const membership = await ctx.prisma.organizationMember.findUnique({
+      where: {
+        organizationId_userId: {
+          organizationId: event.organizationId,
+          userId: ctx.user.id,
+        },
+      },
+    });
 
-      return {
-        ...event,
-        orderCount: event._count.orders,
-        ticketCount: event._count.tickets,
-        myRole: membership?.role,
-      };
-    }),
+    if (!membership && ctx.user.role !== "ADMIN") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You don't have access to this event",
+      });
+    }
+
+    return {
+      ...event,
+      orderCount: event._count.orders,
+      ticketCount: event._count.tickets,
+      myRole: membership?.role,
+    };
+  }),
 
   /**
    * Create event
    */
   create: orgMemberProcedure("ADMIN")
-    .input(createEventSchema)
+    .input(createEventSchema.extend({ organizationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { title, slug: inputSlug, ...data } = input;
+      const { title, slug: inputSlug, organizationId, ...data } = input;
 
       // Generate slug if not provided
       const slug = inputSlug || generateUniqueSlug(title);
@@ -302,7 +304,7 @@ export const eventRouter = router({
       const existingEvent = await ctx.prisma.event.findUnique({
         where: {
           organizationId_slug: {
-            organizationId: data.organizationId,
+            organizationId,
             slug,
           },
         },
@@ -320,6 +322,9 @@ export const eventRouter = router({
           title,
           slug,
           ...data,
+          organization: {
+            connect: { id: organizationId },
+          },
           status: "DRAFT",
         },
       });

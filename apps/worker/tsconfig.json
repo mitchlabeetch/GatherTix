@@ -3,13 +3,10 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@ticketing/database": ["../../packages/database/src"],
-      "@ticketing/shared": ["../../packages/shared/src"],
-      "@ticketing/email": ["../../packages/email/src"],
-      "@ticketing/pdf": ["../../packages/pdf/src"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

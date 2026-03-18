@@ -86,7 +86,7 @@ export const authRouter = router({
     });
 
     // Create session
-    const session = await lucia.createSession(user.id, {});
+    const session = await lucia.createSession(user.id, { created_at: new Date() });
     const sessionCookie = lucia.createSessionCookie(session.id);
 
     ctx.res.header("Set-Cookie", sessionCookie.serialize());
@@ -138,7 +138,7 @@ export const authRouter = router({
     });
 
     // Create session
-    const session = await lucia.createSession(user.id, {});
+    const session = await lucia.createSession(user.id, { created_at: new Date() });
     const sessionCookie = lucia.createSessionCookie(session.id);
 
     ctx.res.header("Set-Cookie", sessionCookie.serialize());
@@ -215,7 +215,7 @@ export const authRouter = router({
 
       // Invalidate all sessions except current
       await lucia.invalidateUserSessions(ctx.user.id);
-      const session = await lucia.createSession(ctx.user.id, {});
+      const session = await lucia.createSession(ctx.user.id, { created_at: new Date() });
       const sessionCookie = lucia.createSessionCookie(session.id);
       ctx.res.header("Set-Cookie", sessionCookie.serialize());
 

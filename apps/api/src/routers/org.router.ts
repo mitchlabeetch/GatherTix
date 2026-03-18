@@ -157,6 +157,7 @@ export const orgRouter = router({
       data: {
         name,
         slug,
+        subdomain: slug,
         ...rest,
       },
     });

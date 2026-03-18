@@ -13,7 +13,7 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
-import Fastify from "fastify";
+import Fastify, { type FastifyLoggerInstance } from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
 import rateLimit from "@fastify/rate-limit";
@@ -37,7 +37,7 @@ declare module "fastify" {
 
 async function main() {
   const app = Fastify({
-    logger: logger as unknown as Fastify.FastifyLoggerInstance,
+    logger: logger as unknown as FastifyLoggerInstance,
   });
 
   // Raw body parser for all application/json requests.
@@ -46,21 +46,17 @@ async function main() {
   // signature verification) and all other JSON routes.
   // The JSON parsing overhead is negligible — the buffer is parsed once and
   // the raw bytes are only stored on requests that actually need them.
-  app.addContentTypeParser(
-    "application/json",
-    { parseAs: "buffer" },
-    function (req, body, done) {
-      if (req.url?.startsWith("/api/webhooks")) {
-        // Attach raw buffer to request for Stripe/Zeffy signature verification
-        req.rawBody = body as Buffer;
-      }
-      try {
-        done(null, JSON.parse((body as Buffer).toString()));
-      } catch (err) {
-        done(err as Error, undefined);
-      }
+  app.addContentTypeParser("application/json", { parseAs: "buffer" }, function (req, body, done) {
+    if (req.url?.startsWith("/api/webhooks")) {
+      // Attach raw buffer to request for Stripe/Zeffy signature verification
+      req.rawBody = body as Buffer;
     }
-  );
+    try {
+      done(null, JSON.parse((body as Buffer).toString()));
+    } catch (err) {
+      done(err as Error, undefined);
+    }
+  });
 
   // Register plugins
   await app.register(compress);
@@ -129,8 +125,8 @@ async function main() {
     trpcOptions: {
       router: appRouter,
       createContext,
-      onError: ({ path, error }) => {
-        logger.error({ path, error }, "tRPC error");
+      onError: (opts: { path?: string; error: unknown }) => {
+        logger.error({ path: opts.path, error: opts.error }, "tRPC error");
       },
     },
   });

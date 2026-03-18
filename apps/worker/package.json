@@ -13,23 +13,27 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@react-email/render": "^1.0.1",
+    "@react-pdf/renderer": "^4.0.0",
     "@ticketing/database": "workspace:*",
     "@ticketing/email": "workspace:*",
     "@ticketing/pdf": "workspace:*",
     "@ticketing/shared": "workspace:*",
     "bullmq": "^5.18.0",
     "dotenv": "^16.4.5",
-    "ioredis": "^5.4.1",
+    "ioredis": "5.9.3",
     "minio": "^8.0.2",
     "pino": "^9.5.0",
     "pino-pretty": "^11.3.0",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1"
   },
   "devDependencies": {
     "@ticketing/eslint-config": "workspace:*",
     "@ticketing/typescript-config": "workspace:*",
     "@types/node": "^20.16.11",
     "@types/qrcode": "^1.5.5",
+    "@types/react": "^18.3.11",
     "eslint": "^8.57.1",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3"

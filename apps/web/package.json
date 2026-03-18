@@ -13,6 +13,8 @@
     "clean": "rm -rf .next dist"
   },
   "dependencies": {
+    "@radix-ui/react-separator": "^1.1.1",
+    "@ticketing/api": "workspace:*",
     "@fontsource/outfit": "^5.1.1",
     "@fontsource/plus-jakarta-sans": "^5.1.1",
     "@hookform/resolvers": "^5.2.2",

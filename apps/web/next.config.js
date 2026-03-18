@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   transpilePackages: ["@ticketing/ui", "@ticketing/shared", "@ticketing/database"],
   images: {
     remotePatterns: [
@@ -61,4 +60,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

@@ -16,7 +16,11 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure, orgMemberProcedure, publicProcedure } from "../trpc/trpc";
-import { generateOrderNumber, generateTicketNumber, generateQRToken } from "@ticketing/shared/utils";
+import {
+  generateOrderNumber,
+  generateTicketNumber,
+  generateQRToken,
+} from "@ticketing/shared/utils";
 import { createOrderSchema } from "@ticketing/shared/validations";
 import { addMinutes } from "date-fns";
 
@@ -30,7 +34,9 @@ export const orderRouter = router({
         organizationId: z.string(),
         eventId: z.string().optional(),
         search: z.string().optional(),
-        status: z.enum(["PENDING", "COMPLETED", "FAILED", "CANCELLED", "REFUNDED", "EXPIRED"]).optional(),
+        status: z
+          .enum(["PENDING", "COMPLETED", "FAILED", "CANCELLED", "REFUNDED", "EXPIRED"])
+          .optional(),
         page: z.number().default(1),
         limit: z.number().default(20),
       })
@@ -111,61 +117,59 @@ export const orderRouter = router({
   /**
    * Get order by ID
    */
-  getById: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const order = await ctx.prisma.order.findUnique({
-        where: { id: input.id },
-        include: {
-          event: {
-            select: {
-              id: true,
-              title: true,
-              startDate: true,
-              venueName: true,
-              organizationId: true,
-            },
+  getById: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const order = await ctx.prisma.order.findUnique({
+      where: { id: input.id },
+      include: {
+        event: {
+          select: {
+            id: true,
+            title: true,
+            startDate: true,
+            venueName: true,
+            organizationId: true,
           },
-          tickets: {
-            include: {
-              ticketType: {
-                select: {
-                  name: true,
-                },
+        },
+        tickets: {
+          include: {
+            ticketType: {
+              select: {
+                name: true,
               },
             },
           },
-          payments: true,
         },
+        payments: true,
+      },
+    });
+
+    if (!order) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Order not found",
       });
+    }
 
-      if (!order) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Order not found",
-        });
-      }
+    // Check access - user must be order owner, org member, or admin
+    const hasAccess =
+      order.customerEmail === ctx.user.email ||
+      ctx.user.role === "ADMIN" ||
+      (await ctx.prisma.organizationMember.findFirst({
+        where: {
+          organizationId: order.event.organizationId,
+          userId: ctx.user.id,
+        },
+      }));
 
-      // Check access - user must be order owner, org member, or admin
-      const hasAccess =
-        order.customerEmail === ctx.user.email ||
-        ctx.user.role === "ADMIN" ||
-        (await ctx.prisma.organizationMember.findFirst({
-          where: {
-            organizationId: order.event.organizationId,
-            userId: ctx.user.id,
-          },
-        }));
+    if (!hasAccess) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You don't have access to this order",
+      });
+    }
 
-      if (!hasAccess) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You don't have access to this order",
-        });
-      }
-
-      return order;
-    }),
+    return order;
+  }),
 
   /**
    * Get order by order number (public)
@@ -300,7 +304,7 @@ export const orderRouter = router({
         });
       }
 
-      subtotal += ticketType.price.toNumber() * item.quantity;
+      subtotal += ticketType.price * item.quantity;
     }
 
     // Calculate fees (simplified - 3% + $0.30 per ticket)
@@ -464,29 +468,24 @@ export const orderRouter = router({
     .query(async ({ ctx, input }) => {
       const { eventId } = input;
 
-      const [
-        totalOrders,
-        completedOrders,
-        pendingOrders,
-        refundedOrders,
-        totalRevenue,
-      ] = await Promise.all([
-        ctx.prisma.order.count({ where: { eventId } }),
-        ctx.prisma.order.count({ where: { eventId, status: "COMPLETED" } }),
-        ctx.prisma.order.count({ where: { eventId, status: "PENDING" } }),
-        ctx.prisma.order.count({ where: { eventId, status: "REFUNDED" } }),
-        ctx.prisma.order.aggregate({
-          where: { eventId, status: "COMPLETED" },
-          _sum: { total: true },
-        }),
-      ]);
+      const [totalOrders, completedOrders, pendingOrders, refundedOrders, totalRevenue] =
+        await Promise.all([
+          ctx.prisma.order.count({ where: { eventId } }),
+          ctx.prisma.order.count({ where: { eventId, status: "COMPLETED" } }),
+          ctx.prisma.order.count({ where: { eventId, status: "PENDING" } }),
+          ctx.prisma.order.count({ where: { eventId, status: "REFUNDED" } }),
+          ctx.prisma.order.aggregate({
+            where: { eventId, status: "COMPLETED" },
+            _sum: { total: true },
+          }),
+        ]);
 
       return {
         totalOrders,
         completedOrders,
         pendingOrders,
         refundedOrders,
-        totalRevenue: totalRevenue._sum.total?.toNumber() || 0,
+        totalRevenue: totalRevenue._sum.total || 0,
         conversionRate: totalOrders > 0 ? (completedOrders / totalOrders) * 100 : 0,
       };
     }),

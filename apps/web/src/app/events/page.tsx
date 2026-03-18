@@ -15,12 +15,19 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 "use client";
 
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Search, Ticket } from "lucide-react";
@@ -35,22 +42,22 @@ export default function EventsPage() {
   });
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Discover Events</h1>
-        <p className="text-muted-foreground">
-          Find and book tickets for amazing events near you
-        </p>
+        <h1 className="mb-2 text-3xl font-bold">Discover Events</h1>
+        <p className="text-muted-foreground">Find and book tickets for amazing events near you</p>
       </div>
 
       {/* Search */}
       <div className="relative mb-8 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
         <Input
           placeholder="Search events..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setSearch((e.currentTarget as HTMLInputElement).value)
+          }
           className="pl-10"
         />
       </div>
@@ -69,9 +76,9 @@ export default function EventsPage() {
           ))}
         </div>
       ) : events?.data.length === 0 ? (
-        <div className="text-center py-16">
-          <Ticket className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No events found</h3>
+        <div className="py-16 text-center">
+          <Ticket className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+          <h3 className="mb-2 text-lg font-semibold">No events found</h3>
           <p className="text-muted-foreground">
             Try adjusting your search or check back later for new events.
           </p>
@@ -80,16 +87,16 @@ export default function EventsPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events?.data.map((event) => (
             <Card key={event.id} className="flex flex-col">
-              <div className="aspect-video relative bg-muted">
+              <div className="bg-muted relative aspect-video">
                 {event.image ? (
                   <img
                     src={event.image}
                     alt={event.title}
-                    className="object-cover w-full h-full rounded-t-lg"
+                    className="h-full w-full rounded-t-lg object-cover"
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <Calendar className="h-12 w-12 text-muted-foreground" />
+                  <div className="flex h-full items-center justify-center">
+                    <Calendar className="text-muted-foreground h-12 w-12" />
                   </div>
                 )}
               </div>
@@ -104,12 +111,12 @@ export default function EventsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1">
-                <div className="flex items-center gap-1 text-sm text-muted-foreground mb-2">
+                <div className="text-muted-foreground mb-2 flex items-center gap-1 text-sm">
                   <MapPin className="h-3 w-3" />
                   {event.city || "Online"}
                   {event.state && `, ${event.state}`}
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-2">
+                <p className="text-muted-foreground line-clamp-2 text-sm">
                   {event.description || "No description available"}
                 </p>
                 {event.ticketTypes.length > 0 && (
@@ -121,10 +128,7 @@ export default function EventsPage() {
                 )}
               </CardContent>
               <CardFooter>
-                <Link
-                  href={`/events/${event.organization.slug}/${event.slug}`}
-                  className="w-full"
-                >
+                <Link href={`/events/${event.organization.slug}/${event.slug}`} className="w-full">
                   <Button className="w-full">View Event</Button>
                 </Link>
               </CardFooter>

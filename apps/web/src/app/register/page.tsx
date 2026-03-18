@@ -15,14 +15,21 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 "use client";
 
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -68,13 +75,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
+    <div className="bg-muted/50 flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
-          <CardDescription>
-            Enter your details to create your account
-          </CardDescription>
+          <CardDescription>Enter your details to create your account</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -90,8 +95,11 @@ export default function RegisterPage() {
                   id="firstName"
                   placeholder="John"
                   value={formData.firstName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, firstName: e.target.value })
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setFormData({
+                      ...formData,
+                      firstName: (e.currentTarget as HTMLInputElement).value,
+                    })
                   }
                   required
                 />
@@ -102,8 +110,11 @@ export default function RegisterPage() {
                   id="lastName"
                   placeholder="Doe"
                   value={formData.lastName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, lastName: e.target.value })
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setFormData({
+                      ...formData,
+                      lastName: (e.currentTarget as HTMLInputElement).value,
+                    })
                   }
                   required
                 />
@@ -116,8 +127,11 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="name@example.com"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({
+                    ...formData,
+                    email: (e.currentTarget as HTMLInputElement).value,
+                  })
                 }
                 required
               />
@@ -128,8 +142,11 @@ export default function RegisterPage() {
                 id="password"
                 type="password"
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({
+                    ...formData,
+                    password: (e.currentTarget as HTMLInputElement).value,
+                  })
                 }
                 required
               />
@@ -140,8 +157,11 @@ export default function RegisterPage() {
                 id="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
-                onChange={(e) =>
-                  setFormData({ ...formData, confirmPassword: e.target.value })
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({
+                    ...formData,
+                    confirmPassword: (e.currentTarget as HTMLInputElement).value,
+                  })
                 }
                 required
               />
@@ -152,7 +172,7 @@ export default function RegisterPage() {
               {register.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create account
             </Button>
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-center text-sm">
               Already have an account?{" "}
               <Link href="/login" className="text-primary hover:underline">
                 Sign in

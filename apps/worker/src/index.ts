@@ -18,7 +18,7 @@ import IORedis from "ioredis";
 import dotenv from "dotenv";
 import { logger } from "./lib/logger";
 import { processSendEmail } from "./jobs/send-email";
-import { processGeneratePDF } from "./jobs/generate-pdf";
+import { processGeneratePDF } from "./jobs/generate-pdf.js";
 import { processWebhook } from "./jobs/webhook";
 
 // Load environment variables

@@ -13,8 +13,9 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
+import crypto from "node:crypto";
 import { Job } from "bullmq";
-import { prisma } from "@ticketing/database";
+import { Prisma, WebhookEvent, prisma } from "@ticketing/database";
 import { logger } from "../lib/logger";
 
 interface WebhookJobData {
@@ -43,6 +44,10 @@ export async function processWebhook(job: Job<WebhookJobData>): Promise<void> {
       return;
     }
 
+    if (!isWebhookEvent(event)) {
+      throw new Error(`Unknown webhook event: ${event}`);
+    }
+
     // Check if webhook is subscribed to this event
     if (!webhook.events.includes(event)) {
       logger.info({ jobId: job.id, webhookId, event }, "Webhook not subscribed to event, skipping");
@@ -53,8 +58,8 @@ export async function processWebhook(job: Job<WebhookJobData>): Promise<void> {
     const delivery = await prisma.webhookDelivery.create({
       data: {
         webhookId,
-        event: event as any,
-        payload,
+        event,
+        payload: toInputJsonObject(payload),
         status: "PENDING",
       },
     });
@@ -90,7 +95,10 @@ export async function processWebhook(job: Job<WebhookJobData>): Promise<void> {
       throw new Error(`Webhook delivery failed: ${response.status} ${response.statusText}`);
     }
 
-    logger.info({ jobId: job.id, webhookId, deliveryId: delivery.id }, "Webhook delivered successfully");
+    logger.info(
+      { jobId: job.id, webhookId, deliveryId: delivery.id },
+      "Webhook delivered successfully"
+    );
   } catch (error) {
     logger.error({ jobId: job.id, error }, "Failed to process webhook");
     throw error;
@@ -98,9 +106,15 @@ export async function processWebhook(job: Job<WebhookJobData>): Promise<void> {
 }
 
 function generateSignature(payload: Record<string, unknown>, secret: string): string {
-  // Simple HMAC signature (in production, use a proper crypto library)
-  const crypto = require("crypto");
   const hmac = crypto.createHmac("sha256", secret);
   hmac.update(JSON.stringify(payload));
   return `sha256=${hmac.digest("hex")}`;
+}
+
+function isWebhookEvent(value: string): value is WebhookEvent {
+  return Object.values(WebhookEvent).some((event) => event === value);
+}
+
+function toInputJsonObject(value: Record<string, unknown>): Prisma.InputJsonObject {
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonObject;
 }

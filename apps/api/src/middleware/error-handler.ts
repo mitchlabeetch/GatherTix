@@ -71,7 +71,10 @@ export function errorHandler(
       error: {
         code: "VALIDATION_ERROR",
         message: "Validation failed",
-        details: { [error.validation[0].dataPath]: [error.message || "Invalid value"] },
+        details: {
+          [String(error.validation[0]?.instancePath || error.validation[0]?.keyword || "request")]:
+            [error.message || "Invalid value"],
+        },
       },
       meta: { timestamp, requestId },
     };

@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
+import * as React from "react";
 import { Job } from "bullmq";
 import { renderToBuffer } from "@react-pdf/renderer";
 import * as QRCode from "qrcode";
@@ -53,25 +54,25 @@ export async function processGeneratePDF(job: Job<GeneratePDFJobData>): Promise<
 
     // Generate PDF
     const pdfBuffer = await renderToBuffer(
-      TicketPDF({
-        eventName: ticket.event.title,
-        eventDate: ticket.event.startDate.toLocaleDateString("en-US", {
+      <TicketPDF
+        eventName={ticket.event.title}
+        eventDate={ticket.event.startDate.toLocaleDateString("en-US", {
           weekday: "long",
           year: "numeric",
           month: "long",
           day: "numeric",
-        }),
-        eventTime: ticket.event.startDate.toLocaleTimeString("en-US", {
+        })}
+        eventTime={ticket.event.startDate.toLocaleTimeString("en-US", {
           hour: "numeric",
           minute: "2-digit",
-        }),
-        eventLocation: ticket.event.venueName || "TBA",
-        attendeeName: ticket.attendeeName,
-        ticketType: ticket.ticketType.name,
-        ticketNumber: ticket.ticketNumber,
-        orderNumber: ticket.order.orderNumber,
-        qrCodeDataUrl,
-      })
+        })}
+        eventLocation={ticket.event.venueName || "TBA"}
+        attendeeName={ticket.attendeeName}
+        ticketType={ticket.ticketType.name}
+        ticketNumber={ticket.ticketNumber}
+        orderNumber={ticket.order.orderNumber}
+        qrCodeDataUrl={qrCodeDataUrl}
+      />
     );
 
     // TODO: Upload PDF to S3/MinIO and update ticket with URL
